@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">MovieToWatchApp</string>
+    <string name="parenthesis_open">(</string>
+    <string name="parenthesis_close">)</string>
+    <string name="star_description">Star icon in black colour</string>
+    <string name="movie_poster">Movie\'s poster</string>
+    <string name="saved_movies">Saved Movies</string>
+    <string name="heart_icon">Heart icon</string>
+    <string name="search_icon">Search icon</string>
+    <string name="start_typing"><i>Start typing</i></string>
+    <string name="cancel_icon">Cancel icon</string>
+    <string name="movie_detail">Movie details</string>
+    <string name="broken_image">Broken image indicating error</string>
+    <string name="rating">rating</string>
+    <string name="per_ten">/10</string>
+    <string name="released">released</string>
+    <string name="bordered_heart">bordered heart icon</string>
+    <string name="tools_overview">101-year-old Rose DeWitt Bukater tells the story of her life aboard the Titanic, 84 years later. A young Rose boards the ship with her mother and fiancé. Meanwhile, Jack Dawson and Fabrizio De Rossi win third-class tickets aboard the ship</string>
+    <string name="language">language</string>
+    <string name="genre">genre</string>
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/savedFragment"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.breiter.movietowatchapp.ui.screen.search.SearchFragment"
+        android:label="search_fragment"
+        tools:layout="@layout/search_fragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_savedFragment"
+            app:destination="@id/savedFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.breiter.movietowatchapp.ui.screen.detail.DetailFragment"
+        android:label="detail_fragment"
+        tools:layout="@layout/detail_fragment">
+        <argument
+            android:name="selectedMovie"
+            app:argType="com.breiter.movietowatchapp.data.domain.Movie"
+            />
+        <action
+            android:id="@+id/action_detailFragment_to_savedFragment"
+            app:destination="@id/savedFragment" />
+        <action
+            android:id="@+id/action_detailFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedFragment"
+        android:name="com.breiter.movietowatchapp.ui.screen.saved.SavedFragment"
+        android:label="saved_fragment"
+        tools:layout="@layout/saved_fragment" >
+        <action
+            android:id="@+id/action_savedFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_savedFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+</navigation>

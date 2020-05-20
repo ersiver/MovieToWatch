@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.breiter.movietowatchapp.ui.screen.search.SearchViewModel" />
+    </data>
+
+    <androidx.appcompat.widget.Toolbar style="@style/ToolbarStyle">
+
+        <ImageView
+            android:id="@+id/favourite_image"
+            style="@style/ToolbarIconStyle"
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/margin_sixteen"
+            android:contentDescription="@string/heart_icon"
+            android:onClick="@{()-> viewModel.onSavedClicked()}"
+            android:src="@drawable/ic_favorite" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <EditText
+                android:id="@+id/queryEditText"
+                style="@style/EditTextStyle"
+                android:hint="@string/start_typing"
+                android:importantForAutofill="no"
+                app:showSoftInput="@{true}"
+                android:onClick="@{()-> viewModel.onClearClicked()}"
+                android:onTextChanged="@{viewModel::onQueryTextChanged}"
+                app:clearText="@{viewModel.clearQuery}" >
+                <requestFocus/>
+            </EditText>
+
+            <ImageView
+                android:id="@+id/clearTextImageView"
+                style="@style/CancelIconStyle"
+                android:contentDescription="@string/cancel_icon"
+                android:src="@drawable/ic_cancel" />
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+</layout>
+
+
+

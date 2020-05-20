@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.breiter.movietowatchapp.ui.screen.saved.SavedViewModel" />
+    </data>
+
+    <androidx.appcompat.widget.Toolbar
+        style="@style/ToolbarStyle">
+
+
+        <ImageView
+            android:id="@+id/favourite_image"
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/margin_sixteen"
+            android:contentDescription="@string/heart_icon"
+            android:src="@drawable/ic_favorite"
+            style="@style/ToolbarIconStyle" />
+
+        <TextView
+            android:id="@+id/title_text"
+            android:text="@string/saved_movies"
+            style="@style/ToolbarTitleTextStyle" />
+
+        <ImageView
+            android:id="@+id/search_image"
+            style="@style/ToolbarIconStyle"
+            android:onClick="@{()-> viewModel.onSearchClick()}"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/margin_sixteen"
+            android:contentDescription="@string/search_icon"
+            android:src="@drawable/ic_search" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+</layout>

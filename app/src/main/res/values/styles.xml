@@ -1,0 +1,152 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="OverviewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">@dimen/text_size_eighteen</item>
+    </style>
+
+    <style name="DividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/divider_height</item>
+        <item name="android:layout_marginTop">@dimen/margin_one</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
+    <style name="OverviewPosterStyle">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:contentDescription">@string/movie_poster</item>
+    </style>
+
+    <style name="RatingIconStyle">
+        <item name="android:layout_width">@dimen/rating_ic_size</item>
+        <item name="android:layout_height">@dimen/rating_ic_size</item>
+        <item name="android:layout_below">@id/year_text</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_marginStart">@dimen/margin_twelve</item>
+        <item name="android:contentDescription">@string/star_description</item>
+    </style>
+
+    <style name="ToolbarIconStyle">
+        <item name="android:layout_width">@dimen/toolbar_icon_size</item>
+        <item name="android:layout_height">@dimen/toolbar_icon_size</item>
+    </style>
+
+    <style name="ToolbarTitleTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+    </style>
+
+    <style name="CancelIconStyle">
+        <item name="android:layout_width">@dimen/toolbar_title_text_size</item>
+        <item name="android:layout_height">@dimen/toolbar_title_text_size</item>
+        <item name="android:layout_alignEnd">@id/queryEditText</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">@dimen/padding_small</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginStart">@dimen/margin_twelve</item>
+        <item name="android:layout_marginEnd">@dimen/margin_twelve</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:textColorHint">@android:color/white</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textCursorDrawable">@android:color/white</item>
+        <item name="android:textSize">@dimen/toolbar_title_text_size</item>
+    </style>
+
+    <style name="MovieListStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
+    <style name="DetailFavouriteIconStyle">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_below">@id/divider3</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginEnd">24dp</item>
+    </style>
+
+    <style name="DetailTitleStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_below">@id/toolbar</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginTop">@dimen/margin_four</item>
+        <item name="android:layout_marginBottom">@dimen/margin_four</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="DetailPosterStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">250dp</item>
+        <item name="android:layout_below">@id/title_text</item>
+        <item name="android:contentDescription">@string/movie_poster</item>
+    </style>
+
+    <style name="DetailSubLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="LinLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_four</item>
+        <item name="android:layout_marginEnd">@dimen/margin_four</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="DetailOverviewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin_four</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="DetailTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="SimpleTextViewStyle">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ToolbarStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@drawable/background_toolbar</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:weightSum">100</item>
+    </style>
+
+</resources>

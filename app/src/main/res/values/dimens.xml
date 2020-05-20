@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_one">1dp</dimen>
+    <dimen name="margin_two">2dp</dimen>
+    <dimen name="margin_twelve">12dp</dimen>
+    <dimen name="margin_sixteen">16dp</dimen>
+    <dimen name="padding_small">3dp</dimen>
+    <dimen name="text_size_eighteen">18sp</dimen>
+    <dimen name="rating_ic_size">24dp</dimen>
+    <dimen name="divider_height">0.8dp</dimen>
+    <dimen name="toolbar_icon_size">32dp</dimen>
+    <dimen name="toolbar_title_text_size">22sp</dimen>
+    <dimen name="margin_four">4dp</dimen>
+    <dimen name="margin_eight">8dp</dimen>
+</resources>
