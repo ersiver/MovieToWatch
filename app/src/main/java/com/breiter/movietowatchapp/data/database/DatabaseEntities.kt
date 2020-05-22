@@ -16,7 +16,6 @@ data class DatabaseMovie(
     @ColumnInfo(name = "movie_genres") val genreIds: List<Int>?
 )
 
-
 @Entity(tableName = "genres_table")
 data class DatabaseGenre(
     @PrimaryKey @ColumnInfo(name = "genre_id") val id: Int,

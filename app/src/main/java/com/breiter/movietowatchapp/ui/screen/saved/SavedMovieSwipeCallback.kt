@@ -16,6 +16,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+
 class SavedMovieSwipeCallback(
     private val context: Context,
     private val recyclerView: RecyclerView,

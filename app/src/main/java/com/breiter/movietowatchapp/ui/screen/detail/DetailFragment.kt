@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.breiter.movietowatchapp.databinding.DetailFragmentBinding
 
+
 class DetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
 

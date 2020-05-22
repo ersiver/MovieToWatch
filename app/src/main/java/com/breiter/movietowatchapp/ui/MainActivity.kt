@@ -8,6 +8,7 @@ import com.breiter.movietowatchapp.R
  * This is an application that uses the Navigation library.
  * Content is displayed by Fragments.
  */
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

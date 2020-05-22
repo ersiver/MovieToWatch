@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.breiter.movietowatchapp.databinding.SearchFragmentBinding
 
+
 class SearchFragment : Fragment() {
     private lateinit var searchViewModel: SearchViewModel
 

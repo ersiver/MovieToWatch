@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 
+
 class SavedFragment : Fragment() {
     private val binding: SavedFragmentBinding by lazy {
         SavedFragmentBinding.inflate(layoutInflater)

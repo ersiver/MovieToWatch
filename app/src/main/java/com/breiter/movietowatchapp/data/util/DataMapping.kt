@@ -7,6 +7,7 @@ import com.breiter.movietowatchapp.data.network.GenreResponseDTO
 import com.breiter.movietowatchapp.data.network.MovieResponseDTO
 
 
+
 /**
  * Mapping DTO to domain and database objects
  */

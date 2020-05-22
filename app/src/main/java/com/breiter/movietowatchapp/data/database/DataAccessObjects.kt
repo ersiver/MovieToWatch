@@ -3,7 +3,6 @@ package com.breiter.movietowatchapp.data.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
-
 @Dao
 interface MovieDao {
 

@@ -11,5 +11,4 @@ class Constants {
     object DataWorker{
         const val WORK_NAME = "com.breiter.movietowatchapp.data.work.RefreshDataWorker"
     }
-
 }

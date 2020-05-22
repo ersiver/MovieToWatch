@@ -1,5 +1,6 @@
 package com.breiter.movietowatchapp.data.domain
 
+
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 

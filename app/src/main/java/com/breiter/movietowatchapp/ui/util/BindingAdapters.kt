@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.util.*
 
+
 /**
  * Binding adapter used to to display images from URL using Glide.
  */

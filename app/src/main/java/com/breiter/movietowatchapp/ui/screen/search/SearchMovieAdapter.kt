@@ -30,7 +30,8 @@ class SearchMovieAdapter(
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemMovieBinding.inflate(layoutInflater, parent, false)
+                val binding =
+                    ListItemMovieBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }

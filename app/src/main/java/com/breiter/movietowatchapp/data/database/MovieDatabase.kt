@@ -12,7 +12,6 @@ import com.breiter.movietowatchapp.data.util.DataConverter
 )
 @TypeConverters(DataConverter::class)
 abstract class MovieDatabase : RoomDatabase() {
-
     abstract val movieDao: MovieDao
     abstract val genreDao: GenreDao
 

@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonClass
 /**
  * DTO are responsible for parsing responses from network.
  */
+
 @JsonClass(generateAdapter = true)
 data class MovieResponseDTO(@Json(name = "results") val moviesDTO: List<MovieDTO>)
 

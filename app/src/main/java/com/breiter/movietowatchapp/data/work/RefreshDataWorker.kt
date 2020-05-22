@@ -11,7 +11,6 @@ import retrofit2.HttpException
 /**
  * WorkManager background job to fetch genre network data weekly.
  */
-
 class RefreshDataWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(
     appContext, params
 ) {

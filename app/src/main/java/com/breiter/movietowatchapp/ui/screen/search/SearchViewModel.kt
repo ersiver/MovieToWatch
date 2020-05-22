@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+
 class SearchViewModel(app: Application) : AndroidViewModel(app) {
     private val repository = MovieRepository(MovieDatabase.getInstance(app), RetrofitClient())
     private val job = Job()

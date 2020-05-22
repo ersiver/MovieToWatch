@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
+
 class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel(app) {
     private val repository = MovieRepository(MovieDatabase.getInstance(app), RetrofitClient())
     private val job = Job()

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.databinding.ListItemMovieBinding
 
+
 class SavedMovieAdapter(private val listener: OnClickListener) :
     ListAdapter<Movie, SavedMovieAdapter.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

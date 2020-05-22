@@ -7,6 +7,7 @@ import com.squareup.moshi.Types
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import java.util.*
 
+
 class DataConverter {
     private val moshi: Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
