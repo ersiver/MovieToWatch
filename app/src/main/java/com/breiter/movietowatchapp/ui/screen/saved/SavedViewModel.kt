@@ -34,21 +34,18 @@ class SavedViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Called when app launches to display saved data.
-     * Gets _savedMovies from database via repository.
-     * Observes changes and update _savedMovies.
+     * Called when app launches to display saved movies.
+     * Creates _savedMovies MediatorLiveData, which observes repository
+     * LiveData and will updates list of saved movies onChanged events.
      */
     private fun getSavedMovies() {
-        coroutineScope.launch {
-            _savedMovies.addSource(repository.getSavedMovies()) {
-                _savedMovies.value = it
-            }
+        _savedMovies.addSource(repository.getSavedMovies()) {
+            _savedMovies.value = it
         }
     }
 
     /**
-     * Executes once a movie item is clicked.
-     * Triggers navigation to detail fragment.
+     * Executes once a movie is selected. Triggers navigation to DetailFragment.
      */
     fun displayMovieDetails(movie: Movie) {
         _navigateToSelectedMovie.value = movie
@@ -62,18 +59,16 @@ class SavedViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Sets the value of _deleteMovie to the movie that
-     * was swiped and deletes it from a database.
+     * Executes onSwipe.
      */
     fun deleteMovie(movie: Movie) {
         coroutineScope.launch {
             repository.delete(movie)
-            // repository.getSavedMovies()
         }
     }
 
     /**
-     * Executes once SEARCH icon is clicked and navigate to the search fragment
+     * Executes once search_image icon is clicked and triggers navigation to the SearchFragment.
      */
     fun onSearchClick() {
         _navigateToSearch.value = true

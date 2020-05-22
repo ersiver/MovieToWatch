@@ -13,5 +13,4 @@ class DetailViewModelFactory(val app: Application, val movie: Movie) : ViewModel
             return DetailViewModel(app, movie) as T
         throw IllegalArgumentException("Uknwown viewModel class")
     }
-
 }

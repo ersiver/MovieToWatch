@@ -87,7 +87,7 @@
                     <TextView
                         android:id="@+id/genre_text"
                         style="@style/DetailTextViewStyle"
-                        app:genreFormatted="@{viewModel.genreNames}"
+                        app:genreFormatted="@{viewModel.genreAsString}"
                         tools:text="Drama" />
                 </LinearLayout>
 
@@ -129,7 +129,7 @@
                     android:layout_below="@id/language_linear_layout" />
 
                 <ImageView
-                    android:id="@+id/favourite_image"
+                    android:id="@+id/saved_movies"
                     style="@style/DetailFavouriteIconStyle"
                     android:contentDescription="@string/heart_icon"
                     app:src="@{viewModel.isSaved}"

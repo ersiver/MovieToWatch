@@ -51,7 +51,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Invokes getMovieList method and Sets value of _clearQuery to false
+     * Invokes getMovieList function and sets value of _clearQuery to false,
      * if the value of user's input is not an empty string.
      */
     private fun startSearching() {
@@ -64,7 +64,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Get _searchedMovies from network via repository.
+     * Gets _searchedMovies from network via repository.
      */
     private fun getMovieList(query: String) {
         coroutineScope.launch {
@@ -79,7 +79,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Executes once cancel button is clicked and triggers clearing of the editText via BindingAdapter.
+     * Executes once cancel button is clicked and triggers clearing of the EditText via BindingAdapter.
      * Triggers clearing of a data list via BindingAdapter, so the recycler view is empty.
      */
     fun onClearClicked() {
@@ -87,7 +87,7 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Executes once a movie item is clicked and triggers navigation to detail fragment.
+     * Executes once a movie is selected. Triggers navigation to DetailFragment.
      */
     fun displayMovieDetails(movie: Movie) {
         _navigateToSelectedMovie.value = movie
@@ -101,7 +101,8 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Executes once saved button is clicked and triggers navigation to saved fragment.
+     * Executes once saved_movies is clicked and triggers navigation to SavedFragment.
+
      */
     fun onSavedClicked() {
         _navigateToSaved.value = true

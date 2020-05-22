@@ -205,7 +205,6 @@ class SavedMovieSwipeCallback(
     /**
      *  Class representing under-layout button
      */
-
     class DeleteMovieButton(private val context: Context, private val listener: DeleteButtonListener) {
         private var pos: Int = 0
         private var clickRegion: RectF? = null

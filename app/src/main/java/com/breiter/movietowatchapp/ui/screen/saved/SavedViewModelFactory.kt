@@ -12,5 +12,4 @@ class SavedViewModelFactory(val app: Application) : ViewModelProvider.Factory {
             return SavedViewModel(app) as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
-
 }

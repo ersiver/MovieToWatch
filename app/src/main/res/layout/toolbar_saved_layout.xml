@@ -12,7 +12,7 @@
 
 
         <ImageView
-            android:id="@+id/favourite_image"
+            android:id="@+id/saved_movies"
             android:layout_gravity="start"
             android:layout_marginStart="@dimen/margin_sixteen"
             android:contentDescription="@string/heart_icon"

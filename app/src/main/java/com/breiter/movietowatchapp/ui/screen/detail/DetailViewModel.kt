@@ -16,13 +16,13 @@ class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 
+    lateinit var genreAsString: LiveData<List<String>>
+
+    val isSaved: LiveData<Boolean> = repository.isSavedMovie
+
     private val _selectedMovie = MutableLiveData<Movie>()
     val selectedMovie: LiveData<Movie>
         get() = _selectedMovie
-
-    private val _isSaved = repository.isSavedMovie
-    val isSaved: LiveData<Boolean>
-        get() = _isSaved
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
@@ -32,10 +32,6 @@ class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel
     val navigateToSaved: LiveData<Boolean>
         get() = _navigateToSaved
 
-    private val _genreNames = MediatorLiveData<List<String>>()
-    val genreNames: LiveData<List<String>>
-        get() = _genreNames
-
     init {
         _selectedMovie.value = movie
         getGenresNames()
@@ -43,18 +39,16 @@ class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel
     }
 
     /**
-     * Get genres as list of String via repository.
+     * Creates a genreAsString LiveData, that depends on selectedMovie's genres' id.
      */
     private fun getGenresNames() {
-        coroutineScope.launch {
-            _genreNames.addSource(repository.getGenresNames(movie.genreIds!!)) {
-                _genreNames.value = it
-            }
+        genreAsString = selectedMovie.switchMap { movie ->
+            repository.getGenresNames(movie.genreIds!!)
         }
     }
 
     /**
-     * Triggers displaying correct icon to add or remove a movie
+     * Triggers loading of a correct icon (save or delete) to the favourite_image.
      */
     private fun checkIfSaved() {
         coroutineScope.launch {
@@ -62,12 +56,16 @@ class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel
         }
     }
 
+    /**
+     * Executes when the favourite_image is clicked.
+     * Will save or delete the movie respectively.
+     */
     fun onAddClick() {
-        _isSaved.value?.let { isSaved ->
-            if (isSaved)
-                removeFromSaved()
-            else
-                saveMovie()
+        isSaved.value?.let { isSaved ->
+            when (isSaved) {
+                true -> removeFromSaved()
+                false -> saveMovie()
+            }
         }
     }
 
@@ -85,35 +83,35 @@ class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel
     }
 
     /**
-     * Executes once SEARCH icon is clicked and navigate to the search fragment
+     * Executes once search_image is clicked and triggers navigation to the SearchFragment.
      */
     fun onSearchClick() {
         _navigateToSearch.value = true
     }
 
     /**
-     * Resets value of _navigateToSearchFragment once the navigation has taken place.
+     * Resets value of _navigateToSearchFragment LiveData once the navigation has taken place.
      */
     fun navigateToSearchComplete() {
         _navigateToSearch.value = null
     }
 
     /**
-     * Executes once SAVED icon is clicked and triggers navigation to saved fragment.
+     * Executes once saved_movies is clicked and triggers navigation to SavedFragment.
      */
     fun onSavedClicked() {
         _navigateToSaved.value = true
     }
 
     /**
-     * Resets value of _navigateToSaved once the navigation has taken place.
+     * Resets value of _navigateToSaved LiveData once the navigation has taken place.
      */
     fun navigateToSavedCompleted() {
         _navigateToSaved.value = null
     }
 
     /**
-     * Cancel coroutine, when view model is finished
+     * Cancel coroutine, when viewModel is finished
      */
     override fun onCleared() {
         super.onCleared()
