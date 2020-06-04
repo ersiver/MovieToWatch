@@ -86,8 +86,8 @@ abstract class SavedMovieSwipeCallback(
                 gestureDetector.onTouchEvent(event)
 
             } else {
-                //Different item was swiped. Notify that the item has changes in order
-                // to prevent having multiple items on swipe at the same time).
+                //Different item was swiped. Notify that the item has changed
+                //to prevent having multiple items on swipe at the same time).
                 recyclerView.adapter!!.notifyItemChanged(swipedPos)
                 shouldListenEvents = false
             }

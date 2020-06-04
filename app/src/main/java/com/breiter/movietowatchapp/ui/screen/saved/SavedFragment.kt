@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 
-
 class SavedFragment : Fragment() {
     private val binding: SavedFragmentBinding by lazy {
         SavedFragmentBinding.inflate(layoutInflater)
