@@ -12,4 +12,9 @@
     <dimen name="toolbar_title_text_size">22sp</dimen>
     <dimen name="margin_four">4dp</dimen>
     <dimen name="margin_eight">8dp</dimen>
+
+    <dimen name="buttonWidth">90dp</dimen>
+    <dimen name="buttonInset">1dp</dimen>
+    <dimen name="buttonCorner">10dp</dimen>
+
 </resources>

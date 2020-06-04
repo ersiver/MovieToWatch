@@ -3,7 +3,6 @@ package com.breiter.movietowatchapp.ui.screen.saved
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -12,31 +11,45 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.R
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+private const val TRANSITION_THRESHOLD = 0.5F
+private const val VELOCITY_THRESHOLD = 5F
+private const val ESCAPE_VELOCITY = 0.1F
 
-class SavedMovieSwipeCallback(
-    private val context: Context,
-    private val recyclerView: RecyclerView,
-    private val listener: DeleteButtonListener
+abstract class SavedMovieSwipeCallback(
+    context: Context,
+    private val recyclerView: RecyclerView
 ) : ItemTouchHelper.SimpleCallback(
     0, ItemTouchHelper.LEFT
 ) {
-    private lateinit var gestureDetector: GestureDetector
-    private lateinit var recoverQueue: LinkedList<Int>
-    private var buttonList: MutableList<DeleteMovieButton>? = null
-    private var buttonBuffer: MutableMap<Int, MutableList<DeleteMovieButton>>
+    private var gestureDetector: GestureDetector
+    private var shouldListenEvents = false
+    private var buttonBuffer: MutableMap<Int, MutableList<SwipeButton>>
+    private var swipeTreshold = 0.5f
     private var swipedPos = -1
-    private var swipeTreshold = 0.5F
+    private var itemRect = Rect()
+    private val buttonWidth = context.resources.getDimension(R.dimen.buttonWidth)
+    private val buttonInset = context.resources.getDimension(R.dimen.buttonInset)
+    private var buttonRectRight = 0F
+    private var buttonRectLeft = 0F
+    private var buttonRectTop = 0F
+    private var buttonRectBottom = 0F
+
+    private lateinit var currentViewHolder: RecyclerView.ViewHolder
+    private lateinit var swipedItem: View
+    private lateinit var buttonRect: RectF
+    private lateinit var buttonList: MutableList<SwipeButton>
 
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        override fun onSingleTapUp(event: MotionEvent): Boolean {
+            val motionEventX = event.x
+            val motionEventY = event.y
 
-            for (button in buttonList!!) {
-                if (button.onClick(e!!.x, e.y)) {
-                    swipedPos = -1
+            for (button in buttonList) {
+                if (button.onClick(motionEventX, motionEventY)) {
+                    shouldListenEvents = false
                     break
                 }
             }
@@ -44,62 +57,57 @@ class SavedMovieSwipeCallback(
         }
     }
 
+    init {
+        buttonList = ArrayList()
+        gestureDetector = GestureDetector(context, gestureListener)
+        buttonBuffer = HashMap()
+        attachSwipe()
+    }
+
     private val onTouchListener = View.OnTouchListener { _, event ->
-        if (swipedPos < 0) return@OnTouchListener false
+        if (!shouldListenEvents) return@OnTouchListener false
 
-        val point = Point(event.rawX.toInt(), event.rawY.toInt())
-        val swipeViewHolder =
-            recyclerView.findViewHolderForAdapterPosition(swipedPos)
+        //Getting ViewItem bounding rectangle.
+        currentViewHolder =
+            recyclerView.findViewHolderForAdapterPosition(swipedPos)!!
+        swipedItem = currentViewHolder.itemView
+        swipedItem.getGlobalVisibleRect(itemRect)
 
-        val swipedItem = swipeViewHolder!!.itemView
-        val rect = Rect()
-        swipedItem.getGlobalVisibleRect(rect)
-
+        //Detecting user's motions on the screen and responding to it.
+        val motionPoint = Point(event.rawX.toInt(), event.rawY.toInt())
         if (event.action == MotionEvent.ACTION_DOWN ||
             event.action == MotionEvent.ACTION_UP ||
             event.action == MotionEvent.ACTION_MOVE
         ) {
-            if (rect.top < point.y && rect.bottom > point.y)
+            if (itemRect.top < motionPoint.y &&
+                itemRect.bottom > motionPoint.y
+            ) {
+                //No changes in swiping, start listening for the events.
                 gestureDetector.onTouchEvent(event)
-            else {
-                recoverQueue.add(swipedPos)
-                swipedPos = -1
-                recoverSwipeItem()
+
+            } else {
+                //Different item was swiped. Notify that the item has changes in order
+                // to prevent having multiple items on swipe at the same time).
+                recyclerView.adapter!!.notifyItemChanged(swipedPos)
+                shouldListenEvents = false
             }
-
         }
-
         false
     }
 
-    init {
-        this.buttonList = ArrayList()
-        this.gestureDetector = GestureDetector(context, gestureListener)
-        this.buttonBuffer = HashMap()
-        this.recoverQueue = IntLinkedList()
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        swipedPos = viewHolder.adapterPosition
+        shouldListenEvents = true
+        recyclerView.setOnTouchListener(onTouchListener)
 
-        attachSwipe()
-    }
+        if (buttonBuffer.containsKey(swipedPos))
+            buttonList = buttonBuffer[swipedPos]!!
+        else
+            buttonList.clear()
 
-    private fun recoverSwipeItem() {
-        while (!recoverQueue.isEmpty()) {
-            val pos = recoverQueue.poll()!!
-            if (pos > -1)
-                recyclerView.adapter!!.notifyItemChanged(pos)
-        }
-    }
-
-    private fun attachSwipe() {
-        val itemTouchHelper = ItemTouchHelper(this)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-    class IntLinkedList : LinkedList<Int>() {
-        override fun add(element: Int): Boolean {
-            return if (contains(element))
-                false
-            else super.add(element)
-        }
+        buttonBuffer.clear()
+        swipeTreshold = TRANSITION_THRESHOLD * buttonList.size * buttonWidth
     }
 
     override fun onMove(
@@ -110,33 +118,6 @@ class SavedMovieSwipeCallback(
         return false
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        recyclerView.setOnTouchListener(onTouchListener)
-
-        val pos = viewHolder.adapterPosition
-
-        if (swipedPos != pos)
-            recoverQueue.add(swipedPos)
-
-        swipedPos = pos
-
-        if (buttonBuffer.containsKey(swipedPos))
-            buttonList = buttonBuffer[swipedPos]
-        else
-            buttonList!!.clear()
-
-        buttonBuffer.clear()
-        swipeTreshold = TRANSITION_THRESHOLD * buttonList!!.size * BUTTON_WIDTH
-        recoverSwipeItem()
-    }
-
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) =  swipeTreshold
-
-    override fun getSwipeEscapeVelocity(defaultValue: Float) = ESCAPE_VELOCITY * defaultValue
-
-    override fun getSwipeVelocityThreshold(defaultValue: Float) = VELOCITY_THRESHOLD * defaultValue
-
     override fun onChildDraw(
         c: Canvas,
         recyclerView: RecyclerView,
@@ -146,29 +127,26 @@ class SavedMovieSwipeCallback(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        val position = viewHolder.adapterPosition
         var translationX = dX
+        val currentPos = viewHolder.adapterPosition
         val itemView = viewHolder.itemView
-
-        if (position < 0) {
-            swipedPos = position
-            return
-        }
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (dX < 0) {
-                var buffer: MutableList<DeleteMovieButton> = ArrayList()
+                var buttons: MutableList<SwipeButton> = ArrayList()
 
-                if (!buttonBuffer.containsKey(position)) {
-                    buffer.add(DeleteMovieButton(context, listener))
-                    buttonBuffer[position] = buffer
-
+                if (!buttonBuffer.containsKey(currentPos)) {
+                    addSwipeButton(viewHolder, buttons)
+                    buttonBuffer[currentPos] = buttons
                 } else {
-                    buffer = buttonBuffer[position]!!
+                    buttons = buttonBuffer[currentPos]!!
                 }
 
-                translationX = dX * buffer.size * BUTTON_WIDTH / itemView.width
-                drawButton(c, itemView, buffer, position, translationX)
+                //Calculate amount of horizontal displacement in pixels caused by user on swipe event.
+                //The displacement is limited to the amount needed to display swipe-button(s).
+                translationX = dX * buttons.size * buttonWidth / itemView.width
+
+                drawButton(c, itemView, buttons, currentPos, translationX)
             }
         }
         super.onChildDraw(
@@ -182,93 +160,116 @@ class SavedMovieSwipeCallback(
         )
     }
 
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) = swipeTreshold
+
+    override fun getSwipeEscapeVelocity(defaultValue: Float) = ESCAPE_VELOCITY * defaultValue
+
+    override fun getSwipeVelocityThreshold(defaultValue: Float) = VELOCITY_THRESHOLD * defaultValue
+
     private fun drawButton(
-        c: Canvas,
+        canvas: Canvas,
         itemView: View,
-        buffer: MutableList<DeleteMovieButton>,
-        pos: Int,
+        buffer: MutableList<SwipeButton>,
+        itemPos: Int,
         translationX: Float
     ) {
-        var right = itemView.right.toFloat()
-        val dButtonWidth = -1 * translationX / buffer.size
+        buttonRectTop = itemView.top.toFloat()
+        buttonRectRight = itemView.right.toFloat()
+        buttonRectBottom = itemView.bottom.toFloat()
+
+        val currentWidth = translationX / buffer.size
 
         for (button in buffer) {
-            val left = right - dButtonWidth
-            button.onDraw(
-                c,
-                RectF(left, itemView.top.toFloat(), right, itemView.bottom.toFloat()),
-                pos
+            //Calculate the left edge location of this button depending on the
+            // horizontal displacement caused by user on swipe event.
+            buttonRectLeft = buttonRectRight + currentWidth
+
+            buttonRect = RectF(
+                buttonRectLeft,
+                buttonRectTop,
+                buttonRectRight - buttonInset,
+                buttonRectBottom
             )
-            right = left
+
+            button.onDraw(canvas, buttonRect, itemPos)
+            buttonRectRight = buttonRectLeft
         }
     }
 
+    private fun attachSwipe() {
+        val itemTouchHelper = ItemTouchHelper(this)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    abstract fun addSwipeButton(
+        viewHolder: RecyclerView.ViewHolder,
+        buffer: MutableList<SwipeButton>
+    )
+
     /**
-     *  Class representing under-layout button
+     *  Class representing button(s) revealed, when the ViewHolder is swiped.
+     *  The color, icon and OnClick action will be implemented in hosting activity.
      */
-    class DeleteMovieButton(private val context: Context, private val listener: DeleteButtonListener) {
-        private var pos: Int = 0
-        private var clickRegion: RectF? = null
+    class SwipeButton(
+        context: Context,
+        imageResId: Int,
+        private val bgColor: Int,
+        private val listener: SwipeButtonListener
+    ) {
+        private var position: Int = -1
+        private val paint = Paint().apply {
+            color = bgColor
+        }
+        private val cornerRadius = context.resources.getDimension(R.dimen.buttonCorner)
+        private var icon: Drawable = ContextCompat.getDrawable(context, imageResId)!!
+        private var bitmapIcon = drawableToBitmap(icon)
+        private lateinit var extraCanvas: Canvas
+        private lateinit var clickRegion: RectF
 
         fun onDraw(canvas: Canvas, rectF: RectF, pos: Int) {
-            val paint = Paint()
+            //Draw rectangle background
+            canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint)
 
-            //Draw red background
-            paint.color = Color.RED
-            canvas.drawRoundRect(rectF, CORNER_RADIUS, CORNER_RADIUS, paint)
-
-            //Draw trash icon in the middle of swipe button
-            val imageResId: Int = R.drawable.ic_delete
-            val d = ContextCompat.getDrawable(context, imageResId)
-            val bitmap = drawableToBitmap(d)
-
+            //Draw bitmapIcon in the middle of the button
             canvas.drawBitmap(
-                bitmap,
-                (rectF.left + rectF.right) / 2 - d!!.intrinsicWidth / 2,
-                (rectF.top + rectF.bottom) / 2 - d.intrinsicHeight / 2,
+                bitmapIcon,
+                (rectF.left + rectF.right) / 2f - icon.intrinsicWidth / 2f,
+                (rectF.top + rectF.bottom) / 2f - icon.intrinsicHeight / 2f,
                 paint
             )
 
             clickRegion = rectF
-            this.pos = pos
+            position = pos
         }
 
-        private fun drawableToBitmap(d: Drawable?): Bitmap {
-            if (d is BitmapDrawable)
-                return d.bitmap
-
+        private fun drawableToBitmap(drawable: Drawable): Bitmap {
             val bitmap =
                 Bitmap.createBitmap(
-                    d!!.intrinsicWidth,
-                    d.intrinsicWidth,
+                    drawable.intrinsicWidth,
+                    drawable.intrinsicWidth,
                     Bitmap.Config.ARGB_8888
                 )
 
-            val canvas = Canvas(bitmap)
-            d.setBounds(0, 0, canvas.width, canvas.height)
-            d.draw(canvas)
+            extraCanvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, extraCanvas.width, extraCanvas.height)
+            drawable.draw(extraCanvas)
 
             return bitmap
         }
 
-        fun onClick(dX: Float, dY: Float): Boolean {
-            if (clickRegion != null && clickRegion!!.contains(dX, dY)) {
-                listener.onSwiped(pos)
+        fun onClick(motionEventX: Float, motionEventY: Float): Boolean {
+            if (clickRegion.contains(motionEventX, motionEventY)) {
+                listener.onSwiped(position)
                 return true
             }
             return false
         }
     }
 
-    internal companion object {
-        private const val BUTTON_WIDTH = 200
-        private const val TRANSITION_THRESHOLD = 0.5F
-        private const val VELOCITY_THRESHOLD = 5F
-        private const val ESCAPE_VELOCITY = 0.1F
-        const val CORNER_RADIUS = 10f
-    }
-
-    class DeleteButtonListener(val listener: (pos: Int) -> Unit) {
+    class SwipeButtonListener(val listener: (pos: Int) -> Unit) {
         fun onSwiped(pos: Int) = listener(pos)
     }
 }
+
+
+

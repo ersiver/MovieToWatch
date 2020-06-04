@@ -73,6 +73,7 @@ fun bindSearchMovieRecyclerView(
         adapter.submitList(emptyList())
     else
         adapter.submitList(data)
+
 }
 
 /**

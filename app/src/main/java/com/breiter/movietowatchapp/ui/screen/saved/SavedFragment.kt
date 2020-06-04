@@ -2,6 +2,7 @@ package com.breiter.movietowatchapp.ui.screen.saved
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 
 
@@ -53,14 +56,28 @@ class SavedFragment : Fragment() {
     }
 
     private fun implementSwipeButton() {
-        SavedMovieSwipeCallback(
+        object : SavedMovieSwipeCallback(
             requireContext(),
-            binding.savedMoviesRecyclerview,
-            SavedMovieSwipeCallback.DeleteButtonListener {
-                val movie = savedAdapter.getMovieAt(it)
-                savedViewModel.deleteMovie(movie)
+            binding.savedMoviesRecyclerview
+        ) {
+            override fun addSwipeButton(
+                viewHolder: RecyclerView.ViewHolder,
+                buffer: MutableList<SwipeButton>
+            ) {
+                buffer.add(
+                    SwipeButton(
+                        requireContext(),
+                        R.drawable.ic_delete,
+                        Color.RED,
+                        SwipeButtonListener {
+                            val movie = savedAdapter.getMovieAt(it)
+                            savedViewModel.deleteMovie(movie)
+                        }
+                    )
+                )
+
             }
-        )
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
