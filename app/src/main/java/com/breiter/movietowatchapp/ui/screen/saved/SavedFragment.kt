@@ -47,8 +47,6 @@ class SavedFragment : Fragment() {
             savedViewModel.deleteMovie(savedAdapter.getMovieAt(it))
         }
 
-
-
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = savedViewModel

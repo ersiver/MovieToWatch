@@ -25,7 +25,7 @@ abstract class SavedMovieSwipeCallback(
     private var gestureDetector: GestureDetector
     private var shouldListenEvents = false
     private var buttonBuffer: MutableMap<Int, MutableList<SwipeButton>>
-    private var swipeTreshold = 0.5f
+    private var swipeTreshold = 0.5F
     private var swipedPos = -1
     private var itemRect = Rect()
     private val buttonWidth = context.resources.getDimension(R.dimen.buttonWidth)
@@ -192,8 +192,7 @@ abstract class SavedMovieSwipeCallback(
             buttonRectRight = buttonRectLeft
         }
     }
-
-
+    
     abstract fun addSwipeButton(
             swipeButtons: MutableList<SwipeButton>
     )
