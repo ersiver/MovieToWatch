@@ -2,7 +2,6 @@ package com.breiter.movietowatchapp.ui.screen.saved
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
+import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 
 class SavedFragment : Fragment() {
     private val binding: SavedFragmentBinding by lazy {
@@ -27,56 +25,38 @@ class SavedFragment : Fragment() {
 
     private val savedViewModel: SavedViewModel by lazy {
         ViewModelProvider(
-            this,
-            SavedViewModelFactory(app)
+                this,
+                SavedViewModelFactory(app)
         ).get(SavedViewModel::class.java)
     }
 
     private lateinit var savedAdapter: SavedMovieAdapter
 
+    private lateinit var onSwipeListener: SwipeListener
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         savedAdapter = SavedMovieAdapter(SavedMovieAdapter.OnClickListener {
             savedViewModel.displayMovieDetails(it)
         })
 
+        onSwipeListener = SwipeListener {
+            savedViewModel.deleteMovie(savedAdapter.getMovieAt(it))
+        }
+
+
+
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = savedViewModel
             savedMoviesRecyclerview.adapter = savedAdapter
+            swipeListener = onSwipeListener
         }
-
-        implementSwipeButton()
 
         return binding.root
-    }
-
-    private fun implementSwipeButton() {
-        object : SavedMovieSwipeCallback(
-            requireContext(),
-            binding.savedMoviesRecyclerview
-        ) {
-            override fun addSwipeButton(
-                viewHolder: RecyclerView.ViewHolder,
-                buffer: MutableList<SwipeButton>
-            ) {
-                buffer.add(
-                    SwipeButton(
-                        requireContext(),
-                        R.drawable.ic_delete,
-                        Color.RED,
-                        SwipeButtonListener {
-                            val movie = savedAdapter.getMovieAt(it)
-                            savedViewModel.deleteMovie(movie)
-                        }
-                    )
-                )
-
-            }
-        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -87,7 +67,7 @@ class SavedFragment : Fragment() {
         savedViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
-                    .navigate(SavedFragmentDirections.actionSavedFragmentToDetailFragment(it))
+                        .navigate(SavedFragmentDirections.actionSavedFragmentToDetailFragment(it))
 
                 // Reset to prevent multiple navigation
                 savedViewModel.navigateToDetailsCompleted()
@@ -98,7 +78,7 @@ class SavedFragment : Fragment() {
         savedViewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
-                    .navigate(SavedFragmentDirections.actionSavedFragmentToSearchFragment())
+                        .navigate(SavedFragmentDirections.actionSavedFragmentToSearchFragment())
                 savedViewModel.navigateToSearchComplete()
             }
         })
@@ -106,7 +86,7 @@ class SavedFragment : Fragment() {
 
     private fun hideSoftInput() {
         val inputMethodManager =
-            requireNotNull(activity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                requireNotNull(activity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }

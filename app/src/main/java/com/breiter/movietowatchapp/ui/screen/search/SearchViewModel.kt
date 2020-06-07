@@ -103,7 +103,6 @@ class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     /**
      * Executes once saved_movies is clicked and triggers navigation to SavedFragment.
-
      */
     fun onSavedClicked() {
         _navigateToSaved.value = true

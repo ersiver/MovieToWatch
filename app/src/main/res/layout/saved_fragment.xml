@@ -10,6 +10,11 @@
         <variable
             name="viewModel"
             type="com.breiter.movietowatchapp.ui.screen.saved.SavedViewModel" />
+
+        <variable
+            name="swipeListener"
+            type="com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:onSwipe="@{swipeListener}"
             app:savedMovieListData="@{viewModel.savedMovies}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             />

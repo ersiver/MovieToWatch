@@ -1,6 +1,7 @@
 package com.breiter.movietowatchapp.ui.util
 
 import android.content.Context
+import android.graphics.Color
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -8,16 +9,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.util.Constants
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieAdapter
+import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback
 import com.breiter.movietowatchapp.ui.screen.search.NetworkStatus
 import com.breiter.movietowatchapp.ui.screen.search.SearchMovieAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.util.*
+import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
+import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeButton
+
 
 /**
  * Binding adapter used to to display images from URL using Glide.
@@ -27,13 +33,13 @@ fun bindImage(imgView: ImageView, posterPath: String?) {
     posterPath?.let {
         val imgUri = (Constants.IMAGE_URL + posterPath).toUri().buildUpon().scheme("https").build()
         Glide.with(imgView.context)
-            .load(imgUri)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.loading_animation)
-                    .error(R.drawable.ic_broken_image)
-            )
-            .into(imgView)
+                .load(imgUri)
+                .apply(
+                        RequestOptions()
+                                .placeholder(R.drawable.loading_animation)
+                                .error(R.drawable.ic_broken_image)
+                )
+                .into(imgView)
     }
 }
 
@@ -63,16 +69,15 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Movie>?) {
  */
 @BindingAdapter("searchedMovieListData", "clearData")
 fun bindSearchMovieRecyclerView(
-    recyclerView: RecyclerView,
-    data: List<Movie>?,
-    clearData: Boolean
+        recyclerView: RecyclerView,
+        data: List<Movie>?,
+        clearData: Boolean
 ) {
     val adapter = recyclerView.adapter as SearchMovieAdapter
     if (clearData)
         adapter.submitList(emptyList())
     else
         adapter.submitList(data)
-
 }
 
 /**
@@ -81,8 +86,8 @@ fun bindSearchMovieRecyclerView(
  */
 @BindingAdapter("visibility")
 fun bindErrorImage(
-    imageView: ImageView,
-    status: NetworkStatus?
+        imageView: ImageView,
+        status: NetworkStatus?
 ) {
 
     when (status) {
@@ -101,8 +106,8 @@ fun bindErrorImage(
  */
 @BindingAdapter("visibility")
 fun bindRecyclerView(
-    recyclerView: RecyclerView,
-    status: NetworkStatus?
+        recyclerView: RecyclerView,
+        status: NetworkStatus?
 ) {
     when (status) {
         NetworkStatus.DONE -> {
@@ -162,8 +167,30 @@ fun ImageView.bindFavouriteIcon(isSaved: Boolean) {
 @BindingAdapter("showSoftInput")
 fun showKeyboard(view: View, isTyping: Boolean) {
     val inputMethodManager =
-        view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     if (isTyping)
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
+
+/**
+ * Binding adapter used to implement a swipe menu.
+ * Each button should have been assigned to a different listener.
+ * Listener functionality is overridden in the SavedFragment.
+ */
+@BindingAdapter("onSwipe")
+fun RecyclerView.setItemSwiped(listener: SwipeListener) {
+
+    val swipeToDeleteButton = SwipeButton(
+            context,
+            R.drawable.ic_delete,
+            Color.RED,
+            listener)
+
+    ItemTouchHelper(object : SavedMovieSwipeCallback(context, this) {
+        override fun addSwipeButton(swipeButtons: MutableList<SwipeButton>) {
+            swipeButtons.add(swipeToDeleteButton)
+        }
+    }).attachToRecyclerView(this)
+}
+

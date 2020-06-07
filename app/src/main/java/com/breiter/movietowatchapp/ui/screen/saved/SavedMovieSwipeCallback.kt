@@ -11,8 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.R
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 private const val TRANSITION_THRESHOLD = 0.5F
 private const val VELOCITY_THRESHOLD = 5F
@@ -61,7 +59,6 @@ abstract class SavedMovieSwipeCallback(
         buttonList = ArrayList()
         gestureDetector = GestureDetector(context, gestureListener)
         buttonBuffer = HashMap()
-        attachSwipe()
     }
 
     private val onTouchListener = View.OnTouchListener { _, event ->
@@ -136,7 +133,7 @@ abstract class SavedMovieSwipeCallback(
                 var buttons: MutableList<SwipeButton> = ArrayList()
 
                 if (!buttonBuffer.containsKey(currentPos)) {
-                    addSwipeButton(viewHolder, buttons)
+                    addSwipeButton(buttons)
                     buttonBuffer[currentPos] = buttons
                 } else {
                     buttons = buttonBuffer[currentPos]!!
@@ -196,25 +193,21 @@ abstract class SavedMovieSwipeCallback(
         }
     }
 
-    private fun attachSwipe() {
-        val itemTouchHelper = ItemTouchHelper(this)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
 
     abstract fun addSwipeButton(
-        viewHolder: RecyclerView.ViewHolder,
-        buffer: MutableList<SwipeButton>
+            swipeButtons: MutableList<SwipeButton>
     )
 
     /**
      *  Class representing button(s) revealed, when the ViewHolder is swiped.
-     *  The color, icon and OnClick action will be implemented in hosting activity.
+     *  The color and icon will be set in the BindingAdapter.
+     *  The listener will be implemented in hosting activity.
      */
     class SwipeButton(
         context: Context,
         imageResId: Int,
         private val bgColor: Int,
-        private val listener: SwipeButtonListener
+        private val listener: SwipeListener
     ) {
         private var position: Int = -1
         private val paint = Paint().apply {
@@ -266,7 +259,7 @@ abstract class SavedMovieSwipeCallback(
         }
     }
 
-    class SwipeButtonListener(val listener: (pos: Int) -> Unit) {
+    class SwipeListener(val listener: (pos: Int) -> Unit) {
         fun onSwiped(pos: Int) = listener(pos)
     }
 }
