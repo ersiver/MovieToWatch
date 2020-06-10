@@ -24,22 +24,23 @@ import java.util.*
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeButton
 
-
 /**
  * Binding adapter used to to display images from URL using Glide.
  */
 @BindingAdapter("imageUrl")
-fun bindImage(imgView: ImageView, posterPath: String?) {
-    posterPath?.let {
+fun ImageView.bindImage(posterPath: String?) {
+    if (posterPath == null)
+        setImageResource(R.drawable.ic_logo)
+    else {
         val imgUri = (Constants.IMAGE_URL + posterPath).toUri().buildUpon().scheme("https").build()
-        Glide.with(imgView.context)
-                .load(imgUri)
-                .apply(
-                        RequestOptions()
-                                .placeholder(R.drawable.loading_animation)
-                                .error(R.drawable.ic_broken_image)
-                )
-                .into(imgView)
+        Glide.with(context)
+            .load(imgUri)
+            .apply(
+                RequestOptions()
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+            )
+            .into(this)
     }
 }
 
@@ -48,9 +49,10 @@ fun bindImage(imgView: ImageView, posterPath: String?) {
  */
 @BindingAdapter("dateFormatter")
 fun TextView.setDateFormatted(date: String?) {
-    text = if (date != null)
-        if (date.length > 4) date.substring(0, 4) else date
-    else
+    text = if (date != null) {
+        if (date.length > 4)
+            date.substring(0, 4) else date
+    } else
         date
 }
 
@@ -58,8 +60,8 @@ fun TextView.setDateFormatted(date: String?) {
  * Binding adapter used to submit list of saved movies to the [SavedMovieAdapter].
  */
 @BindingAdapter("savedMovieListData")
-fun bindRecyclerView(recyclerView: RecyclerView, data: List<Movie>?) {
-    val adapter = recyclerView.adapter as SavedMovieAdapter
+fun RecyclerView.bindRecyclerView(data: List<Movie>?) {
+    val adapter = adapter as SavedMovieAdapter
     adapter.submitList(data)
 }
 
@@ -68,12 +70,8 @@ fun bindRecyclerView(recyclerView: RecyclerView, data: List<Movie>?) {
  * once data is available. If [EditText] is cleared the empty list is submitted.
  */
 @BindingAdapter("searchedMovieListData", "clearData")
-fun bindSearchMovieRecyclerView(
-        recyclerView: RecyclerView,
-        data: List<Movie>?,
-        clearData: Boolean
-) {
-    val adapter = recyclerView.adapter as SearchMovieAdapter
+fun RecyclerView.bindSearchMovieRecyclerView(data: List<Movie>?, clearData: Boolean) {
+    val adapter = this.adapter as SearchMovieAdapter
     if (clearData)
         adapter.submitList(emptyList())
     else
@@ -85,17 +83,13 @@ fun bindSearchMovieRecyclerView(
  * once data is not available and hide it otherwise.
  */
 @BindingAdapter("visibility")
-fun bindErrorImage(
-        imageView: ImageView,
-        status: NetworkStatus?
-) {
-
+fun ImageView.bindErrorImage(status: NetworkStatus?) {
     when (status) {
         NetworkStatus.DONE -> {
-            imageView.visibility = View.GONE
+            visibility = View.GONE
         }
         NetworkStatus.ERROR -> {
-            imageView.visibility = View.VISIBLE
+            visibility = View.VISIBLE
         }
     }
 }
@@ -105,16 +99,13 @@ fun bindErrorImage(
  * is available and hide it on error.
  */
 @BindingAdapter("visibility")
-fun bindRecyclerView(
-        recyclerView: RecyclerView,
-        status: NetworkStatus?
-) {
+fun RecyclerView.setVisibility(status: NetworkStatus?) {
     when (status) {
         NetworkStatus.DONE -> {
-            recyclerView.visibility = View.VISIBLE
+            visibility = View.VISIBLE
         }
         NetworkStatus.ERROR -> {
-            recyclerView.visibility = View.GONE
+            visibility = View.GONE
         }
     }
 }
@@ -123,9 +114,8 @@ fun bindRecyclerView(
  * Binding adapter used to clear user input from [EditText]
  */
 @BindingAdapter("clearText")
-fun clearEditText(editText: EditText, isClicked: Boolean) {
-    if (isClicked)
-        editText.text.clear()
+fun EditText.clearEditText(isClicked: Boolean) {
+    if (isClicked) text.clear()
 }
 
 /**
@@ -165,12 +155,12 @@ fun ImageView.bindFavouriteIcon(isSaved: Boolean) {
  * Binding adapter used to showing keyboard for search fragment.
  */
 @BindingAdapter("showSoftInput")
-fun showKeyboard(view: View, isTyping: Boolean) {
+fun View.showKeyboard(isTyping: Boolean) {
     val inputMethodManager =
-            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     if (isTyping)
-        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
 
 /**
@@ -180,12 +170,12 @@ fun showKeyboard(view: View, isTyping: Boolean) {
  */
 @BindingAdapter("onSwipe")
 fun RecyclerView.setItemSwiped(listener: SwipeListener) {
-
     val swipeToDeleteButton = SwipeButton(
-            context,
-            R.drawable.ic_delete,
-            Color.RED,
-            listener)
+        context,
+        R.drawable.ic_delete,
+        Color.RED,
+        listener
+    )
 
     ItemTouchHelper(object : SavedMovieSwipeCallback(context, this) {
         override fun addSwipeButton(swipeButtons: MutableList<SwipeButton>) {
@@ -193,4 +183,3 @@ fun RecyclerView.setItemSwiped(listener: SwipeListener) {
         }
     }).attachToRecyclerView(this)
 }
-
