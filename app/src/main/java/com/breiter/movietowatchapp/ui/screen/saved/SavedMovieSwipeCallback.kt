@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.R
 
+
 private const val TRANSITION_THRESHOLD = 0.5F
 private const val VELOCITY_THRESHOLD = 5F
 private const val ESCAPE_VELOCITY = 0.1F
