@@ -1,3 +1,4 @@
+
 package com.breiter.movietowatchapp.ui.screen.saved
 
 import android.app.Application
@@ -25,8 +26,8 @@ class SavedFragment : Fragment() {
 
     private val savedViewModel: SavedViewModel by lazy {
         ViewModelProvider(
-                this,
-                SavedViewModelFactory(app)
+            this,
+            SavedViewModelFactory(app)
         ).get(SavedViewModel::class.java)
     }
 
@@ -35,8 +36,8 @@ class SavedFragment : Fragment() {
     private lateinit var onSwipeListener: SwipeListener
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         savedAdapter = SavedMovieAdapter(SavedMovieAdapter.OnClickListener {
@@ -65,7 +66,7 @@ class SavedFragment : Fragment() {
         savedViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
-                        .navigate(SavedFragmentDirections.actionSavedFragmentToDetailFragment(it))
+                    .navigate(SavedFragmentDirections.actionSavedFragmentToDetailFragment(it))
 
                 // Reset to prevent multiple navigation
                 savedViewModel.navigateToDetailsCompleted()
@@ -76,7 +77,7 @@ class SavedFragment : Fragment() {
         savedViewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
-                        .navigate(SavedFragmentDirections.actionSavedFragmentToSearchFragment())
+                    .navigate(SavedFragmentDirections.actionSavedFragmentToSearchFragment())
                 savedViewModel.navigateToSearchComplete()
             }
         })
@@ -84,10 +85,7 @@ class SavedFragment : Fragment() {
 
     private fun hideSoftInput() {
         val inputMethodManager =
-                requireNotNull(activity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            requireNotNull(activity).getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }
-
-
-
