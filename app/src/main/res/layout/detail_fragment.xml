@@ -27,7 +27,7 @@
             style="@style/DetailPosterStyle"
             app:imageUrl="@{viewModel.selectedMovie.posterUrl}"
             android:contentDescription="@string/movie_poster"
-            tools:src="@drawable/ic_poster" />
+            tools:src="@drawable/ic_logo" />
 
         <View
             android:id="@+id/divider1"

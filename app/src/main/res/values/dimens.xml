@@ -15,6 +15,6 @@
 
     <dimen name="buttonWidth">90dp</dimen>
     <dimen name="buttonInset">1dp</dimen>
-    <dimen name="buttonCorner">10dp</dimen>
+    <dimen name="buttonCorner">5dp</dimen>
 
 </resources>

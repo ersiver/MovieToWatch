@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/poster_image"
                 app:imageUrl="@{movie.posterUrl}"
-                tools:src="@drawable/ic_poster"
+                tools:src="@drawable/ic_logo"
                 android:contentDescription="@string/movie_poster"
                 style="@style/OverviewPosterStyle" />
 

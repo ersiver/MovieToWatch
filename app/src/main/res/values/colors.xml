@@ -2,7 +2,6 @@
 <resources>
     <color name="colorPrimary">#434343</color>
     <color name="colorPrimaryDark">#000</color>
-    <color name="colorAccent">#ABA104</color>
-    <color name="stripe_swipe_start_payment_method">#ABA104</color>
-    <color name="stripe_swipe_threshold_payment_method">#D5473F</color>
+    <color name="colorAccent">#c7bb08</color>
+    <color name="swipeButton">#D5473F</color>
 </resources>
