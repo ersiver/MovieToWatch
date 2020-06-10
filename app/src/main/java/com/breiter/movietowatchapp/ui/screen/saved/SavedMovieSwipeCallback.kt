@@ -17,16 +17,18 @@ private const val VELOCITY_THRESHOLD = 5F
 private const val ESCAPE_VELOCITY = 0.1F
 
 abstract class SavedMovieSwipeCallback(
-    context: Context,
+    private val context: Context,
     private val recyclerView: RecyclerView
 ) : ItemTouchHelper.SimpleCallback(
     0, ItemTouchHelper.LEFT
 ) {
-    private var gestureDetector: GestureDetector
+    private lateinit var gestureDetector: GestureDetector
+    private lateinit var gestureListener: GestureDetector.SimpleOnGestureListener
+    private lateinit var currentViewHolder: RecyclerView.ViewHolder
+    private lateinit var swipedItem: View
+    private lateinit var buttonRect: RectF
+
     private var shouldListenEvents = false
-    private var buttonBuffer: MutableMap<Int, MutableList<SwipeButton>>
-    private var swipeTreshold = 0.5F
-    private var swipedPos = -1
     private var itemRect = Rect()
     private val buttonWidth = context.resources.getDimension(R.dimen.buttonWidth)
     private val buttonInset = context.resources.getDimension(R.dimen.buttonInset)
@@ -34,69 +36,19 @@ abstract class SavedMovieSwipeCallback(
     private var buttonRectLeft = 0F
     private var buttonRectTop = 0F
     private var buttonRectBottom = 0F
-
-    private lateinit var currentViewHolder: RecyclerView.ViewHolder
-    private lateinit var swipedItem: View
-    private lateinit var buttonRect: RectF
-    private lateinit var buttonList: MutableList<SwipeButton>
-
-    private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-        override fun onSingleTapUp(event: MotionEvent): Boolean {
-            val motionEventX = event.x
-            val motionEventY = event.y
-
-            for (button in buttonList) {
-                if (button.onClick(motionEventX, motionEventY)) {
-                    shouldListenEvents = false
-                    break
-                }
-            }
-            return true
-        }
-    }
+    private var buttonBuffer: MutableMap<Int, MutableList<SwipeButton>> = HashMap()
+    private var buttonList: MutableList<SwipeButton> = ArrayList()
+    private var swipeTreshold = 0.5F
+    private var swipedPos = -1
 
     init {
-        buttonList = ArrayList()
-        gestureDetector = GestureDetector(context, gestureListener)
-        buttonBuffer = HashMap()
+        initGestureDetector()
     }
 
-    private val onTouchListener = View.OnTouchListener { _, event ->
-        if (!shouldListenEvents) return@OnTouchListener false
-
-        //Getting ViewItem bounding rectangle.
-        currentViewHolder =
-            recyclerView.findViewHolderForAdapterPosition(swipedPos)!!
-        swipedItem = currentViewHolder.itemView
-        swipedItem.getGlobalVisibleRect(itemRect)
-
-        //Detecting user's motions on the screen and responding to it.
-        val motionPoint = Point(event.rawX.toInt(), event.rawY.toInt())
-        if (event.action == MotionEvent.ACTION_DOWN ||
-            event.action == MotionEvent.ACTION_UP ||
-            event.action == MotionEvent.ACTION_MOVE
-        ) {
-            if (itemRect.top < motionPoint.y &&
-                itemRect.bottom > motionPoint.y
-            ) {
-                //No changes in swiping, start listening for the events.
-                gestureDetector.onTouchEvent(event)
-
-            } else {
-                //Different item was swiped. Notify that the item has changed
-                //to prevent having multiple items on swipe at the same time).
-                recyclerView.adapter!!.notifyItemChanged(swipedPos)
-                shouldListenEvents = false
-            }
-        }
-        false
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         swipedPos = viewHolder.adapterPosition
         shouldListenEvents = true
-        recyclerView.setOnTouchListener(onTouchListener)
+        recyclerView.setTouchListener()
 
         if (buttonBuffer.containsKey(swipedPos))
             buttonList = buttonBuffer[swipedPos]!!
@@ -107,12 +59,56 @@ abstract class SavedMovieSwipeCallback(
         swipeTreshold = TRANSITION_THRESHOLD * buttonList.size * buttonWidth
     }
 
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
+    @SuppressLint("ClickableViewAccessibility")
+    private fun RecyclerView.setTouchListener() {
+        setOnTouchListener { _, event ->
+            if (!shouldListenEvents) return@setOnTouchListener false
+
+            //Getting ViewItem bounding rectangle.
+            currentViewHolder =
+                recyclerView.findViewHolderForAdapterPosition(swipedPos)!!
+            swipedItem = currentViewHolder.itemView
+            swipedItem.getGlobalVisibleRect(itemRect)
+
+            //Detecting user's motions on the screen and responding to it.
+            val motionPoint = Point(event.rawX.toInt(), event.rawY.toInt())
+            if (event.action == MotionEvent.ACTION_DOWN ||
+                event.action == MotionEvent.ACTION_UP ||
+                event.action == MotionEvent.ACTION_MOVE
+            ) {
+                if (itemRect.top < motionPoint.y &&
+                    itemRect.bottom > motionPoint.y
+                ) {
+                    //No changes in swiping, start listening for the events.
+                    gestureDetector.onTouchEvent(event)
+
+                } else {
+                    //Different item was swiped. Notify that the item has changed
+                    //to prevent having multiple items on swipe at the same time).
+                    recyclerView.adapter!!.notifyItemChanged(swipedPos)
+                    shouldListenEvents = false
+                }
+            }
+            false
+        }
+    }
+
+    private fun initGestureDetector(){
+        gestureListener = object : GestureDetector.SimpleOnGestureListener() {
+            override fun onSingleTapUp(event: MotionEvent): Boolean {
+                val motionEventX = event.x
+                val motionEventY = event.y
+
+                for (button in buttonList) {
+                    if (button.onClick(motionEventX, motionEventY)) {
+                        shouldListenEvents = false
+                        break
+                    }
+                }
+                return true
+            }
+        }
+        gestureDetector = GestureDetector(context, gestureListener)
     }
 
     override fun onChildDraw(
@@ -125,8 +121,9 @@ abstract class SavedMovieSwipeCallback(
         isCurrentlyActive: Boolean
     ) {
         var translationX = dX
+
         val currentPos = viewHolder.adapterPosition
-        val itemView = viewHolder.itemView
+        val currentItem = viewHolder.itemView
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             if (dX < 0) {
@@ -141,9 +138,9 @@ abstract class SavedMovieSwipeCallback(
 
                 //Calculate amount of horizontal displacement in pixels caused by user on swipe event.
                 //The displacement is limited to the amount needed to display swipe-button(s).
-                translationX = dX * buttons.size * buttonWidth / itemView.width
+                translationX = dX * buttons.size * buttonWidth / currentItem.width
 
-                drawButton(c, itemView, buttons, currentPos, translationX)
+                drawButton(c, currentItem, buttons, currentPos, translationX)
             }
         }
         super.onChildDraw(
@@ -156,12 +153,6 @@ abstract class SavedMovieSwipeCallback(
             isCurrentlyActive
         )
     }
-
-    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) = swipeTreshold
-
-    override fun getSwipeEscapeVelocity(defaultValue: Float) = ESCAPE_VELOCITY * defaultValue
-
-    override fun getSwipeVelocityThreshold(defaultValue: Float) = VELOCITY_THRESHOLD * defaultValue
 
     private fun drawButton(
         canvas: Canvas,
@@ -192,10 +183,21 @@ abstract class SavedMovieSwipeCallback(
             buttonRectRight = buttonRectLeft
         }
     }
-    
-    abstract fun addSwipeButton(
-            swipeButtons: MutableList<SwipeButton>
-    )
+
+    abstract fun addSwipeButton(swipeButtons: MutableList<SwipeButton>)
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder) = swipeTreshold
+
+    override fun getSwipeEscapeVelocity(defaultValue: Float) = ESCAPE_VELOCITY * defaultValue
+
+    override fun getSwipeVelocityThreshold(defaultValue: Float) = VELOCITY_THRESHOLD * defaultValue
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean = false
+
 
     /**
      *  Class representing button(s) revealed, when the ViewHolder is swiped.
@@ -262,6 +264,3 @@ abstract class SavedMovieSwipeCallback(
         fun onSwiped(pos: Int) = listener(pos)
     }
 }
-
-
-
