@@ -26,4 +26,7 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 
 ## Open API
 + MovieToWatch uses the [TMDBApi] for constructing RESTful API. Obtain your free API_KEY: https://www.themoviedb.org/signup and paste it to the Constants file to try the app.
-<img src="https://user-images.githubusercontent.com/58771510/85013170-08256f00-b15c-11ea-96e1-139b6ccd7569.gif" width="33%"/>
+
+<img src="https://user-images.githubusercontent.com/58771510/85013170-08256f00-b15c-11ea-96e1-139b6ccd7569.gif" width="33%"/>  <img src="https://user-images.githubusercontent.com/58771510/92279621-99041f00-eeef-11ea-9e65-f9c1d02805be.jpg" width="33%"/>
+
+
