@@ -7,10 +7,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.databinding.ListItemMovieBinding
+import timber.log.Timber
 
 
 class SavedMovieAdapter(private val listener: OnClickListener) :
     ListAdapter<Movie, SavedMovieAdapter.ViewHolder>(DiffCallback()) {
+
+    init {
+        Timber.i("Adapter init")
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
@@ -46,8 +52,8 @@ class SavedMovieAdapter(private val listener: OnClickListener) :
         }
     }
 
-    class OnClickListener(val listener: (movie: Movie) -> Unit) {
-        fun onClick(movie: Movie) = listener(movie)
+    interface OnClickListener{
+        fun onClick(movie: Movie)
     }
 }
 

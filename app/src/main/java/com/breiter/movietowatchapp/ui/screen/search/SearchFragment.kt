@@ -8,32 +8,50 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.breiter.movietowatchapp.data.database.MovieDatabase
+import com.breiter.movietowatchapp.data.domain.Movie
+import com.breiter.movietowatchapp.data.network.getMovieApiService
+import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SearchFragmentBinding
-
+import com.breiter.movietowatchapp.ui.screen.search.SearchMovieAdapter.OnClickListener
 
 class SearchFragment : Fragment() {
     private lateinit var searchViewModel: SearchViewModel
+
+    private lateinit var binding: SearchFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding = SearchFragmentBinding.inflate(inflater)
+        binding = SearchFragmentBinding.inflate(inflater, container, false)
 
-        val app = requireNotNull(activity).application
-
-        searchViewModel =
-            ViewModelProvider(this, SearchViewModelFactory(app)).get(SearchViewModel::class.java)
+        searchViewModel = obtainViewModel()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = searchViewModel
-            searchedMovieList.adapter = SearchMovieAdapter(SearchMovieAdapter.OnClickListener {
-                searchViewModel.displayMovieDetails(it)
-            })
+
+            val onClick: OnClickListener = object : OnClickListener{
+                override fun onClick(movieItem: Movie) {
+                    searchViewModel.displayMovieDetails(movieItem)
+                }
+            }
+            searchedMovieList.adapter = SearchMovieAdapter(onClick)
         }
         return binding.root
+    }
+
+    private fun obtainViewModel(): SearchViewModel {
+        val app = requireNotNull(activity).application
+        val repository = MovieRepository(
+            getMovieApiService(), MovieDatabase.getInstance(app))
+
+        return ViewModelProvider(
+            this,
+            SearchViewModelFactory(repository)
+        ).get(SearchViewModel::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

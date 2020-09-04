@@ -25,9 +25,10 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding = true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -37,18 +38,30 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //Added libraries:
 
@@ -67,12 +80,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
 
     // Navigation
-    def nav_version = "2.3.0-beta01"
+    def nav_version = "2.3.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //Retrofit
-    def version_retrofit = "2.8.1"
+    def version_retrofit = "2.9.0"
     implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
 
@@ -86,8 +99,8 @@ dependencies {
     implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
 
     //Coroutines
-    def version_kotlin_coroutines = "1.3.5"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_kotlin_coroutines"
+    def version_kotlin_coroutines = "1.3.7"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlin_coroutines"
 
     //Glide
@@ -99,8 +112,29 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // WorkManager + coroutines
-    def work_version = "2.3.4"
+    def work_version = "2.4.0"
     implementation "androidx.work:work-runtime-ktx:$work_version"
 
+    testImplementation 'androidx.test:rules:1.3.0'
 
+    // Mockito framework
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+
+    //kotlinx-coroutines-test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8'
+
+    //JUnit test rules that can be used with LiveData.
+    testImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
+
+    /**
+     * Instrumented unit tests:
+     */
+    //JUnit test rules that can be used with LiveData.
+    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
+
+    // Hamcrest library
+    androidTestImplementation 'org.hamcrest:hamcrest-library:1.3'
+
+    //kotlinx-coroutines-test
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.8'
 }

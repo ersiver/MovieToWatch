@@ -1,17 +1,16 @@
 package com.breiter.movietowatchapp.ui.screen.detail
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.breiter.movietowatchapp.data.domain.Movie
-import java.lang.IllegalArgumentException
+import com.breiter.movietowatchapp.data.repository.MovieRepository
 
 
-class DetailViewModelFactory(val app: Application, val movie: Movie) : ViewModelProvider.Factory {
+class DetailViewModelFactory(private val repository: MovieRepository, val movie: Movie) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
         if (modelClass.isAssignableFrom(DetailViewModel::class.java))
-            return DetailViewModel(app, movie) as T
+            return DetailViewModel(repository, movie) as T
         throw IllegalArgumentException("Unknown viewModel class")
     }
 }

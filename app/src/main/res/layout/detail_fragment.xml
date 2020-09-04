@@ -14,49 +14,79 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/surface"
         tools:context=".ui.screen.detail.DetailFragment">
 
         <TextView
             android:id="@+id/title_text"
-            style="@style/DetailTitleStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceHeadline4"
             android:text="@{viewModel.selectedMovie.title}"
             tools:text="Joker" />
 
-        <ImageView
-            android:id="@+id/poster_image"
-            style="@style/DetailPosterStyle"
-            app:imageUrl="@{viewModel.selectedMovie.posterUrl}"
-            android:contentDescription="@string/movie_poster"
-            tools:src="@drawable/ic_logo" />
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title_text"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <View
-            android:id="@+id/divider1"
-            style="@style/DividerStyle"
-            android:layout_below="@id/poster_image" />
-
-        <ScrollView
-            style="@style/DetailSubLayoutStyle"
-            android:layout_below="@id/divider1">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/movie_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
             <RelativeLayout
-                android:id="@+id/details_layout"
-                style="@style/DetailSubLayoutStyle">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foregroundTint="#D1A3A3">
+
+                <ImageView
+                    android:id="@+id/poster_image"
+                    style="@style/DetailPosterStyle"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:scaleType="centerCrop"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/movie_poster"
+                    app:imageUrl="@{viewModel.selectedMovie.posterUrl}"
+                    tools:src="@drawable/ic_logo" />
 
                 <TextView
                     android:id="@+id/overview_text"
-                    style="@style/DetailOverviewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/poster_image"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:padding="8dp"
                     android:text="@{viewModel.selectedMovie.overview}"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     tools:text="@string/tools_overview" />
 
                 <View
-                    android:id="@+id/divider2"
+                    android:id="@+id/divider1"
                     style="@style/DividerStyle"
                     android:layout_below="@id/overview_text" />
 
                 <LinearLayout
                     android:id="@+id/rating_linear_layout"
                     style="@style/LinLayoutStyle"
-                    android:layout_below="@id/divider2">
+                    android:padding="4dp"
+                    android:layout_below="@id/divider1">
 
                     <TextView
                         style="@style/SimpleTextViewStyle"
@@ -66,18 +96,21 @@
                         android:id="@+id/rating_text"
                         style="@style/DetailTextViewStyle"
                         android:text="@{String.valueOf(viewModel.selectedMovie.rating)}"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                         tools:text="8.2" />
 
                     <TextView
                         android:id="@+id/perTen"
                         style="@style/DetailTextViewStyle"
-                        android:text="@string/per_ten" />
+                        android:text="@string/per_ten"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/genre_linear_layout"
                     style="@style/LinLayoutStyle"
+                    android:padding="4dp"
                     android:layout_below="@+id/rating_linear_layout">
 
                     <TextView
@@ -94,6 +127,7 @@
                 <LinearLayout
                     android:id="@+id/year_linear_layout"
                     style="@style/LinLayoutStyle"
+                    android:padding="4dp"
                     android:layout_below="@id/genre_linear_layout">
 
                     <TextView
@@ -103,6 +137,7 @@
                     <TextView
                         android:id="@+id/releasedTextView"
                         style="@style/DetailTextViewStyle"
+                        android:layout_height="match_parent"
                         app:dateFormatter="@{viewModel.selectedMovie.releaseDate}"
                         tools:text="2019" />
                 </LinearLayout>
@@ -110,6 +145,7 @@
                 <LinearLayout
                     android:id="@+id/language_linear_layout"
                     style="@style/LinLayoutStyle"
+                    android:padding="4dp"
                     android:layout_below="@+id/year_linear_layout">
 
                     <TextView
@@ -124,21 +160,27 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider3"
+                    android:id="@+id/divider2"
                     style="@style/DividerStyle"
                     android:layout_below="@id/language_linear_layout" />
 
                 <ImageView
                     android:id="@+id/saved_movies"
                     style="@style/DetailFavouriteIconStyle"
+                    android:padding="4dp"
+                    android:layout_below="@+id/divider2"
+                    android:layout_alignParentEnd="true"
                     android:contentDescription="@string/heart_icon"
-                    app:src="@{viewModel.isSaved}"
                     android:onClick="@{()-> viewModel.onAddClick()}"
-                    tools:src="@drawable/ic_favorite"/>
+                    app:src="@{viewModel.isSaved}"
+                    tools:src="@drawable/ic_favorite" />
 
             </RelativeLayout>
 
-        </ScrollView>
+
+        </androidx.cardview.widget.CardView>
+
+        </androidx.core.widget.NestedScrollView>
 
         <include
             android:id="@+id/toolbar"

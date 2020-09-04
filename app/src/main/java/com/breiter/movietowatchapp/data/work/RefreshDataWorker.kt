@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.breiter.movietowatchapp.data.database.MovieDatabase
-import com.breiter.movietowatchapp.data.network.RetrofitClient
+import com.breiter.movietowatchapp.data.network.getMovieApiService
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import retrofit2.HttpException
 
@@ -16,7 +16,7 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters) : Corouti
 ) {
     override suspend fun doWork(): Result {
         val movieDatabase = MovieDatabase.getInstance(applicationContext)
-        val repository = MovieRepository(movieDatabase, RetrofitClient())
+        val repository = MovieRepository(getMovieApiService(), movieDatabase )
 
         try {
             repository.getGenresFromNetwork()

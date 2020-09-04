@@ -1,7 +1,5 @@
-
 package com.breiter.movietowatchapp.ui.screen.saved
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.breiter.movietowatchapp.data.database.MovieDatabase
+import com.breiter.movietowatchapp.data.domain.Movie
+import com.breiter.movietowatchapp.data.network.getMovieApiService
+import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 
@@ -20,16 +22,7 @@ class SavedFragment : Fragment() {
         SavedFragmentBinding.inflate(layoutInflater)
     }
 
-    private val app: Application by lazy {
-        requireNotNull(activity).application
-    }
-
-    private val savedViewModel: SavedViewModel by lazy {
-        ViewModelProvider(
-            this,
-            SavedViewModelFactory(app)
-        ).get(SavedViewModel::class.java)
-    }
+    private lateinit var savedViewModel: SavedViewModel
 
     private lateinit var savedAdapter: SavedMovieAdapter
 
@@ -40,8 +33,12 @@ class SavedFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        savedAdapter = SavedMovieAdapter(SavedMovieAdapter.OnClickListener {
-            savedViewModel.displayMovieDetails(it)
+        savedViewModel = obtainViewModel()
+
+        savedAdapter = SavedMovieAdapter(object : SavedMovieAdapter.OnClickListener{
+            override fun onClick(movie: Movie) {
+                savedViewModel.displayMovieDetails(movie)
+            }
         })
 
         onSwipeListener = SwipeListener {
@@ -56,6 +53,20 @@ class SavedFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+
+    // Get DetailViewModel by passing a repository to the factory
+    private fun obtainViewModel(): SavedViewModel {
+        val app = requireNotNull(activity).application
+        val repository = MovieRepository(getMovieApiService(), MovieDatabase.getInstance(app))
+
+        return ViewModelProvider(
+            this,
+            SavedViewModelFactory(repository)
+        ).get(
+            SavedViewModel::class.java
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

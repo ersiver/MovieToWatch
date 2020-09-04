@@ -15,6 +15,3 @@ data class Movie(
     val releaseDate: String?,
     val genreIds: List<Int>?
 ) : Parcelable
-
-
-

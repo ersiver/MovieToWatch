@@ -27,6 +27,3 @@ data class GenreResponseDTO(@Json(name = "genres") val genresDTO: List<GenreDTO>
 
 @JsonClass(generateAdapter = true)
 data class GenreDTO(val id: Int, val name: String)
-
-
-

@@ -1,10 +1,10 @@
 package com.breiter.movietowatchapp.ui.screen.detail
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.breiter.movietowatchapp.data.database.MovieDatabase
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.RetrofitClient
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class DetailViewModel(val app: Application, val movie: Movie) : AndroidViewModel(app) {
-    private val repository = MovieRepository(MovieDatabase.getInstance(app), RetrofitClient())
+class DetailViewModel(private val repository: MovieRepository, val movie: Movie) : ViewModel() {
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 

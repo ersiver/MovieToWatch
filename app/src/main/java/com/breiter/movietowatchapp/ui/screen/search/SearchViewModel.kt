@@ -1,12 +1,9 @@
 package com.breiter.movietowatchapp.ui.screen.search
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.breiter.movietowatchapp.data.database.MovieDatabase
+import androidx.lifecycle.ViewModel
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.RetrofitClient
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,8 +12,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class SearchViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = MovieRepository(MovieDatabase.getInstance(app), RetrofitClient())
+class SearchViewModel(private val repository: MovieRepository) : ViewModel() {
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 

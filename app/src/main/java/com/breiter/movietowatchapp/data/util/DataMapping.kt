@@ -6,8 +6,6 @@ import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.network.GenreResponseDTO
 import com.breiter.movietowatchapp.data.network.MovieResponseDTO
 
-
-
 /**
  * Mapping DTO to domain and database objects
  */
@@ -55,7 +53,7 @@ fun Movie.asDatabaseModel(): DatabaseMovie {
  * Mapping database Movie lists do domain objects
  */
 fun List<DatabaseMovie>.asDomainModel(): List<Movie> {
-    return map() {
+    return map {
         Movie(
             id = it.id,
             title = it.title,
@@ -68,4 +66,3 @@ fun List<DatabaseMovie>.asDomainModel(): List<Movie> {
         )
     }
 }
-

@@ -32,24 +32,3 @@ class DataConverter {
         return jsonAdapter.fromJson(json)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

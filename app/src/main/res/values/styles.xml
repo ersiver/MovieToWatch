@@ -6,6 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor"> @android:color/transparent</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearanceTitle</item>
+    </style>
+
+    <style name="TextAppearanceTitle" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="OverviewStyle">
@@ -79,25 +87,10 @@
     </style>
 
     <style name="DetailFavouriteIconStyle">
-        <item name="android:layout_width">80dp</item>
-        <item name="android:layout_height">80dp</item>
-        <item name="android:layout_below">@id/divider3</item>
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
         <item name="android:layout_alignParentEnd">true</item>
-        <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_marginEnd">24dp</item>
-    </style>
-
-    <style name="DetailTitleStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_below">@id/toolbar</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_four</item>
-        <item name="android:layout_marginBottom">@dimen/margin_four</item>
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="DetailPosterStyle">
@@ -132,13 +125,13 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@android:color/black</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="SimpleTextViewStyle">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="ToolbarStyle">

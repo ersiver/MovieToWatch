@@ -1,10 +1,10 @@
 package com.breiter.movietowatchapp.ui.screen.saved
 
-import android.app.Application
-import androidx.lifecycle.*
-import com.breiter.movietowatchapp.data.database.MovieDatabase
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.RetrofitClient
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class SavedViewModel(app: Application) : AndroidViewModel(app) {
-    private val repository = MovieRepository(MovieDatabase.getInstance(app), RetrofitClient())
+class SavedViewModel(private val repository: MovieRepository) : ViewModel() {
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -37,7 +36,7 @@ class SavedViewModel(app: Application) : AndroidViewModel(app) {
     /**
      * Called when app launches to display saved movies.
      * Creates _savedMovies MediatorLiveData, which observes repository
-     * LiveData and will updates list of saved movies onChanged events.
+     * LiveData and will update list of saved movies onChanged events.
      */
     private fun getSavedMovies() {
         _savedMovies.addSource(repository.getSavedMovies()) {
@@ -90,5 +89,3 @@ class SavedViewModel(app: Application) : AndroidViewModel(app) {
         viewModelJob.cancel()
     }
 }
-
-

@@ -1,18 +1,19 @@
 package com.breiter.movietowatchapp.data.repository
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.breiter.movietowatchapp.data.database.MovieDatabase
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.RetrofitClient
+import com.breiter.movietowatchapp.data.network.MovieApi
 import com.breiter.movietowatchapp.data.util.asDatabaseModel
 import com.breiter.movietowatchapp.data.util.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-
 class MovieRepository(
-    private val database: MovieDatabase,
-    private val retrofitClient: RetrofitClient
+    private val movieApi: MovieApi,
+    private val database: MovieDatabase
 ) {
 
     private val _searchedMovies = MutableLiveData<List<Movie>>()
@@ -22,6 +23,10 @@ class MovieRepository(
     private val _isSavedMovie = MutableLiveData<Boolean>()
     val isSavedMovie: LiveData<Boolean>
         get() = _isSavedMovie
+
+    private val _trailerURL = MutableLiveData<String>()
+    val trailerURL : LiveData<String>
+        get() = _trailerURL
 
 
     /**
@@ -68,14 +73,16 @@ class MovieRepository(
      */
     suspend fun getMovies(title: String) {
         return withContext(Dispatchers.IO) {
-            val moviesDeferred = retrofitClient.getMoviesAsync(title).await()
+            val moviesDeferred =
+                movieApi.getMoviesAsync(title = title).await()
+
             _searchedMovies.postValue(moviesDeferred.asDomainModel())
         }
     }
 
     suspend fun getGenresFromNetwork() {
         withContext(Dispatchers.IO) {
-            val genresDeferred = retrofitClient.getGenresAsync().await()
+            val genresDeferred = movieApi.getGenresAsync().await()
             database.genreDao.insertAll(genresDeferred.asDatabaseModel())
         }
     }

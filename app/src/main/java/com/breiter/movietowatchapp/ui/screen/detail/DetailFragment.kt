@@ -1,6 +1,8 @@
 package com.breiter.movietowatchapp.ui.screen.detail
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.breiter.movietowatchapp.data.database.MovieDatabase
+import com.breiter.movietowatchapp.data.network.getMovieApiService
+import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.DetailFragmentBinding
-
 
 class DetailFragment : Fragment() {
     private lateinit var detailViewModel: DetailViewModel
@@ -22,16 +26,7 @@ class DetailFragment : Fragment() {
     ): View? {
         val binding = DetailFragmentBinding.inflate(inflater)
 
-        val app = requireNotNull(activity).application
-
-        val movie = DetailFragmentArgs.fromBundle(requireArguments()).selectedMovie
-
-        detailViewModel = ViewModelProvider(
-            this,
-            DetailViewModelFactory(app, movie)
-        ).get(
-            DetailViewModel::class.java
-        )
+        detailViewModel = obtainViewModel()
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -39,6 +34,20 @@ class DetailFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    // Get DetailViewModel by passing a repository and a movie to the factory
+    private fun obtainViewModel() : DetailViewModel {
+        val app = requireNotNull(activity).application
+        val repository = MovieRepository(getMovieApiService(), MovieDatabase.getInstance(app))
+        val movie = DetailFragmentArgs.fromBundle(requireArguments()).selectedMovie
+
+        return ViewModelProvider(
+            this,
+            DetailViewModelFactory(repository, movie)
+        ).get(
+            DetailViewModel::class.java
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -62,7 +71,6 @@ class DetailFragment : Fragment() {
                 detailViewModel.navigateToSearchComplete()
             }
         })
-
     }
 
     private fun hideSoftInput() {
@@ -71,4 +79,3 @@ class DetailFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }
-

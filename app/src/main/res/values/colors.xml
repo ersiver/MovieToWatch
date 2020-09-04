@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#c7bb08</color>
     <color name="swipeButton">#D5473F</color>
+    <color name="surface">#f5f5f5</color>
+    <color name="transparent">#00000000</color>
 </resources>
