@@ -1,6 +1,6 @@
 # MovieToWatch
 <img align="right" src="https://user-images.githubusercontent.com/58771510/85013142-fcd24380-b15b-11ea-95e7-704447b2d585.gif" width="33%"/>
-MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates use of the lastes Android development techniques. The app integrates <b>Kotlin Coroutines with Retrofit</b> to fetch movie information and binds all UI components in the XML layout to data sources using a <b>DataBinding</b> rather than programmatically. The UI calls are done in <b>Binding Adapters</b> reducing boilerplate code in the fragments. All is done following <b>MVVM</b> pattern for the presentation layer. Using <b>repository</b> the web services and <b>Room</b> operations are abstracted from the rest of the app.  
+MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates use of the latest Android development techniques. The app integrates <b>Kotlin Coroutines with Retrofit</b> to fetch movie information and binds all UI components in the XML layout to data sources using a <b>DataBinding</b> rather than programmatically. The UI calls are done in <b>Binding Adapters</b> reducing boilerplate code in the fragments. All is done following <b>MVVM</b> pattern for the presentation layer. Using <b>repository</b> the web services and <b>Room</b> operations are abstracted from the rest of the app.  
 
 
 ## Tech stack & Open-source libraries

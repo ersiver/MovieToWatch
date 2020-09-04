@@ -17,6 +17,7 @@ import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 
+
 class SavedFragment : Fragment() {
     private val binding: SavedFragmentBinding by lazy {
         SavedFragmentBinding.inflate(layoutInflater)

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+
 class MovieToWatchApplication : Application() {
     private val applicationScope = CoroutineScope(Dispatchers.Default)
 

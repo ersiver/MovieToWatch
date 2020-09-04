@@ -24,6 +24,7 @@ import java.util.*
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeButton
 
+
 /**
  * Binding adapter used to to display images from URL using Glide.
  */

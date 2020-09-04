@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.databinding.ListItemMovieBinding
 
+
 class SearchMovieAdapter(
     private val listener: OnClickListener
 ) : ListAdapter<Movie, SearchMovieAdapter.ViewHolder>(DIFF_CALLBACK) {

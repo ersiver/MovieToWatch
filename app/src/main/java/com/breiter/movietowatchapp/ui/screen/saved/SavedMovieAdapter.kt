@@ -9,7 +9,6 @@ import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.databinding.ListItemMovieBinding
 import timber.log.Timber
 
-
 class SavedMovieAdapter(private val listener: OnClickListener) :
     ListAdapter<Movie, SavedMovieAdapter.ViewHolder>(DiffCallback()) {
 
