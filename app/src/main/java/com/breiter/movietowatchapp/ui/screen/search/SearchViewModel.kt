@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.breiter.movietowatchapp.data.domain.Movie
+import com.breiter.movietowatchapp.data.repository.IMovieRepository
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class SearchViewModel(private val repository: MovieRepository) : ViewModel() {
+class SearchViewModel(private val repository: IMovieRepository) : ViewModel() {
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 
@@ -75,7 +76,7 @@ class SearchViewModel(private val repository: MovieRepository) : ViewModel() {
     }
 
     /**
-     * Executes once cancel button is clicked and triggers clearing of the EditText via BindingAdapter.
+     * Executes once clear_button is clicked and triggers clearing of the EditText via BindingAdapter.
      * Triggers clearing of a data list via BindingAdapter, so the recycler view is empty.
      */
     fun onClearClicked() {

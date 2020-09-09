@@ -10,10 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.breiter.movietowatchapp.data.database.MovieDatabase
+import com.breiter.movietowatchapp.MovieToWatchApplication
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.getMovieApiService
-import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
 import com.breiter.movietowatchapp.ui.screen.saved.SavedMovieSwipeCallback.SwipeListener
 
@@ -49,7 +47,7 @@ class SavedFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = savedViewModel
-            savedMoviesRecyclerview.adapter = savedAdapter
+            savedMoviesList.adapter = savedAdapter
             swipeListener = onSwipeListener
         }
 
@@ -59,8 +57,8 @@ class SavedFragment : Fragment() {
 
     // Get DetailViewModel by passing a repository to the factory
     private fun obtainViewModel(): SavedViewModel {
-        val app = requireNotNull(activity).application
-        val repository = MovieRepository(getMovieApiService(), MovieDatabase.getInstance(app))
+        val app = requireContext().applicationContext as MovieToWatchApplication
+        val repository = app.movieRepository
 
         return ViewModelProvider(
             this,

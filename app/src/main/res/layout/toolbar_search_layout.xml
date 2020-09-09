@@ -12,11 +12,12 @@
 
     <androidx.appcompat.widget.Toolbar style="@style/ToolbarStyle">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/saved_movies"
             style="@style/ToolbarIconStyle"
             android:layout_gravity="start"
-            android:layout_marginStart="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/dim_2"
+            android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/heart_icon"
             android:onClick="@{()-> viewModel.onSavedClicked()}"
             android:src="@drawable/ic_favorite" />
@@ -29,18 +30,29 @@
             <EditText
                 android:id="@+id/queryEditText"
                 style="@style/EditTextStyle"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:hint="@string/start_typing"
                 android:importantForAutofill="no"
-                app:showSoftInput="@{true}"
-                android:onClick="@{()-> viewModel.onClearClicked()}"
                 android:onTextChanged="@{viewModel::onQueryTextChanged}"
-                app:clearText="@{viewModel.clearQuery}" >
-                <requestFocus/>
+                app:clearText="@{viewModel.clearQuery}"
+                app:showSoftInput="@{true}">
+
+                <requestFocus />
             </EditText>
 
-            <ImageView
-                android:id="@+id/clearTextImageView"
+            <ImageButton
+                android:id="@+id/clear_button"
                 style="@style/CancelIconStyle"
+                android:padding="@dimen/dim_1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dim_2"
+                android:layout_alignParentBottom="true"
+                android:onClick="@{()-> viewModel.onClearClicked()}"
+                android:background="?attr/actionBarItemBackground"
                 android:contentDescription="@string/cancel_icon"
                 android:src="@drawable/ic_cancel" />
         </RelativeLayout>

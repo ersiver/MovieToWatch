@@ -12,8 +12,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_one"
-        android:layout_marginBottom="@dimen/margin_one">
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                     style="@style/OverviewStyle"
                     android:text="@{movie.title}"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/margin_twelve"
+                    android:layout_marginStart="@dimen/dim_1_25"
                     android:textStyle="bold"
                     tools:text="Joker" />
 
@@ -47,7 +47,7 @@
                     style="@style/OverviewStyle"
                     android:layout_below="@id/title_text"
                     android:layout_alignParentStart="true"
-                    android:layout_marginStart="@dimen/margin_twelve"
+                    android:layout_marginStart="@dimen/dim_1_25"
                     android:text="@string/parenthesis_open"
                     tools:text="(" />
 
@@ -78,7 +78,7 @@
                     style="@style/OverviewStyle"
                     android:text="@{String.valueOf(movie.rating)}"
                     android:layout_below="@id/year_text"
-                    android:layout_marginStart="@dimen/margin_two"
+                    android:layout_marginStart="@dimen/dim_0_25"
                     android:layout_toEndOf="@id/rating_image"
                     tools:text="8.2" />
             </RelativeLayout>

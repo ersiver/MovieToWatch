@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.repository.MovieRepository
+import com.breiter.movietowatchapp.data.repository.IMovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: MovieRepository, val movie: Movie) : ViewModel() {
+class DetailViewModel(private val repository: IMovieRepository, val movie: Movie) : ViewModel() {
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
 
@@ -51,7 +51,7 @@ class DetailViewModel(private val repository: MovieRepository, val movie: Movie)
      */
     private fun checkIfSaved() {
         coroutineScope.launch {
-            repository.isSaved(movie)
+            repository.setSaved(movie)
         }
     }
 

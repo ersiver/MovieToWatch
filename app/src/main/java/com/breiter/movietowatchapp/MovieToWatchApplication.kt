@@ -6,6 +6,7 @@ package com.breiter.movietowatchapp
 
 import android.app.Application
 import androidx.work.*
+import com.breiter.movietowatchapp.data.repository.IMovieRepository
 import com.breiter.movietowatchapp.data.util.Constants
 import com.breiter.movietowatchapp.data.work.RefreshDataWorker
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +18,8 @@ import java.util.concurrent.TimeUnit
 
 class MovieToWatchApplication : Application() {
     private val applicationScope = CoroutineScope(Dispatchers.Default)
+    val movieRepository: IMovieRepository
+        get() = ServiceLocator.provideRepository(this)
 
     override fun onCreate() {
         super.onCreate()

@@ -11,10 +11,11 @@
         style="@style/ToolbarStyle">
 
 
-        <ImageView
+        <ImageButton
             android:id="@+id/saved_movies"
             android:layout_gravity="start"
-            android:layout_marginStart="@dimen/margin_sixteen"
+            android:layout_marginStart="@dimen/dim_2"
+            android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/heart_icon"
             android:src="@drawable/ic_favorite"
             style="@style/ToolbarIconStyle" />
@@ -24,12 +25,13 @@
             android:text="@string/saved_movies"
             style="@style/ToolbarTitleTextStyle" />
 
-        <ImageView
-            android:id="@+id/search_image"
+        <ImageButton
+            android:id="@+id/search_button"
             style="@style/ToolbarIconStyle"
+            android:background="?attr/actionBarItemBackground"
             android:onClick="@{()-> viewModel.onSearchClick()}"
             android:layout_gravity="end"
-            android:layout_marginEnd="@dimen/margin_sixteen"
+            android:layout_marginEnd="@dimen/dim_2"
             android:contentDescription="@string/search_icon"
             android:src="@drawable/ic_search" />
 

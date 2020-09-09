@@ -164,12 +164,15 @@
                     style="@style/DividerStyle"
                     android:layout_below="@id/language_linear_layout" />
 
-                <ImageView
-                    android:id="@+id/saved_movies"
+                <ImageButton
+                    android:id="@+id/save_delete_movies"
                     style="@style/DetailFavouriteIconStyle"
                     android:padding="4dp"
+                    android:background="?attr/actionBarItemBackground"
                     android:layout_below="@+id/divider2"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="16dp"
                     android:contentDescription="@string/heart_icon"
                     android:onClick="@{()-> viewModel.onAddClick()}"
                     app:src="@{viewModel.isSaved}"

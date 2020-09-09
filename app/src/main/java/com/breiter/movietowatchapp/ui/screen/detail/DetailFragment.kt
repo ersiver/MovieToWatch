@@ -10,9 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.breiter.movietowatchapp.data.database.MovieDatabase
-import com.breiter.movietowatchapp.data.network.getMovieApiService
-import com.breiter.movietowatchapp.data.repository.MovieRepository
+import com.breiter.movietowatchapp.MovieToWatchApplication
 import com.breiter.movietowatchapp.databinding.DetailFragmentBinding
 
 class DetailFragment : Fragment() {
@@ -36,16 +34,11 @@ class DetailFragment : Fragment() {
 
     // Get DetailViewModel by passing a repository and a movie to the factory
     private fun obtainViewModel() : DetailViewModel {
-        val app = requireNotNull(activity).application
-        val repository = MovieRepository(getMovieApiService(), MovieDatabase.getInstance(app))
+        val app = requireContext().applicationContext as MovieToWatchApplication
         val movie = DetailFragmentArgs.fromBundle(requireArguments()).selectedMovie
-
         return ViewModelProvider(
             this,
-            DetailViewModelFactory(repository, movie)
-        ).get(
-            DetailViewModel::class.java
-        )
+            DetailViewModelFactory(app.movieRepository, movie)).get(DetailViewModel::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

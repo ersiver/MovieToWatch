@@ -1,4 +1,4 @@
-package com.breiter.movietowatchapp
+package com.breiter.movietowatchapp.util
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData

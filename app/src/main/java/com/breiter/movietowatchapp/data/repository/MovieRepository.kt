@@ -5,49 +5,44 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import com.breiter.movietowatchapp.data.database.MovieDatabase
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.MovieApi
+import com.breiter.movietowatchapp.data.network.MovieService
 import com.breiter.movietowatchapp.data.util.asDatabaseModel
 import com.breiter.movietowatchapp.data.util.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class MovieRepository(
-    private val movieApi: MovieApi,
+    private val movieService: MovieService,
     private val database: MovieDatabase
-) {
+) : IMovieRepository {
 
-    private val _searchedMovies = MutableLiveData<List<Movie>>()
-    val searchedMovies: LiveData<List<Movie>>
+    override val _searchedMovies = MutableLiveData<List<Movie>>()
+    override val searchedMovies: LiveData<List<Movie>>
         get() = _searchedMovies
 
-    private val _isSavedMovie = MutableLiveData<Boolean>()
-    val isSavedMovie: LiveData<Boolean>
+    override val _isSavedMovie = MutableLiveData<Boolean>()
+    override val isSavedMovie: LiveData<Boolean>
         get() = _isSavedMovie
-
-    private val _trailerURL = MutableLiveData<String>()
-    val trailerURL : LiveData<String>
-        get() = _trailerURL
-
 
     /**
      * Room operations.
      * Use a coroutine suspend function to run in a background thread.
      */
-    suspend fun insert(movie: Movie) {
+    override suspend fun insert(movie: Movie) {
         withContext(Dispatchers.IO) {
             database.movieDao.insert(movie.asDatabaseModel())
             _isSavedMovie.postValue(true)
         }
     }
 
-    suspend fun delete(movie: Movie) {
+    override suspend fun delete(movie: Movie) {
         withContext(Dispatchers.IO) {
             database.movieDao.delete(movie.asDatabaseModel())
             _isSavedMovie.postValue(false)
         }
     }
 
-    suspend fun isSaved(movie: Movie) {
+    override suspend fun setSaved(movie: Movie) {
         withContext(Dispatchers.IO) {
             val isSaved = database.movieDao.moviesCount(movie.id) != 0
             _isSavedMovie.postValue(isSaved)
@@ -59,11 +54,11 @@ class MovieRepository(
      * the query asynchronously on a background thread, when needed.
      *
      */
-    fun getSavedMovies(): LiveData<List<Movie>> {
+    override fun getSavedMovies(): LiveData<List<Movie>> {
         return database.movieDao.getSavedMovies().map { it.asDomainModel() }
     }
 
-    fun getGenresNames(ids: List<Int>): LiveData<List<String>> {
+    override fun getGenresNames(ids: List<Int>): LiveData<List<String>> {
         return database.genreDao.getGenres(ids)
     }
 
@@ -71,18 +66,18 @@ class MovieRepository(
      * Network operations. Use a coroutine suspend functions
      *  to run in a background thread.
      */
-    suspend fun getMovies(title: String) {
+    override suspend fun getMovies(title: String) {
         return withContext(Dispatchers.IO) {
             val moviesDeferred =
-                movieApi.getMoviesAsync(title = title).await()
+                movieService.getMoviesAsync(title = title).await()
 
             _searchedMovies.postValue(moviesDeferred.asDomainModel())
         }
     }
 
-    suspend fun getGenresFromNetwork() {
+    override suspend fun getGenresFromNetwork() {
         withContext(Dispatchers.IO) {
-            val genresDeferred = movieApi.getGenresAsync().await()
+            val genresDeferred = movieService.getGenresAsync().await()
             database.genreDao.insertAll(genresDeferred.asDatabaseModel())
         }
     }

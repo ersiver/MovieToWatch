@@ -10,6 +10,7 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 + <b>Moshi</b> library to parse the JSON response into a data object.
 + Android Architecture Components: <b>Room, ViewModels, LiveData, DataBinding </b> to hold the data and update the UI. 
 + <b>WorkManager</b> to schedule background work.
++ <b>ServiceLocator</b> to construct and store a repository.
 + <b>Kotlin Coroutines</b> to manage long running network and database tasks.
 + <b>Navigation Components</b> and <b>SafeArgs</b> for navigating and passing data between fragments.
 + <b>Glide</b> to load posters.
@@ -17,6 +18,7 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 
 ### Testing:  
 ####  Device Tests
+ -  <b>Fragments Tests</b> - Integration tests for fragments are using a test double FakeRepository, FragmentScenario for Fragments' lifecycle state and Mockito and Espresso UI testing frameworks.
   - <b>Database Testing</b> - The project creates an in memory database for database test but still runs them on the device. 
 
 ### Features

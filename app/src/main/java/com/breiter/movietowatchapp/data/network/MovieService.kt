@@ -11,27 +11,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private val service: MovieApi by lazy {
-
-    val moshi = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-
-    val retrofit = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .baseUrl(BASE_URL)
-        .build()
-
-    retrofit.create(MovieApi::class.java)
-}
-
-fun getMovieApiService() = service
-
 /**
  * Main network interface which will fetch a list movies
  */
-interface MovieApi {
+interface MovieService {
 
     @GET("search/movie")
     fun getMoviesAsync(
@@ -45,4 +28,20 @@ interface MovieApi {
     fun getGenresAsync(
         @Query("api_key") apiKey: String = API_KEY
     ): Deferred<GenreResponseDTO>
+
+
+    companion object {
+        fun create(): MovieService {
+            val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+
+            return Retrofit.Builder()
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .baseUrl(BASE_URL)
+                .build()
+                .create(MovieService::class.java)
+        }
+    }
 }

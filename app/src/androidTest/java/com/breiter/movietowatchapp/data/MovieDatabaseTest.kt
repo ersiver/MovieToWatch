@@ -9,7 +9,7 @@ import androidx.test.filters.SmallTest
 import com.breiter.movietowatchapp.data.database.DatabaseMovie
 import com.breiter.movietowatchapp.data.database.MovieDao
 import com.breiter.movietowatchapp.data.database.MovieDatabase
-import com.breiter.movietowatchapp.getOrAwaitValue
+import com.breiter.movietowatchapp.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.`is`

@@ -5,14 +5,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.repository.MovieRepository
+import com.breiter.movietowatchapp.data.repository.IMovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class SavedViewModel(private val repository: MovieRepository) : ViewModel() {
+class SavedViewModel(private val repository: IMovieRepository) : ViewModel() {
 
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)

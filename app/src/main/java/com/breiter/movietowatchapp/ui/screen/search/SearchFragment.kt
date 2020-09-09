@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.breiter.movietowatchapp.MovieToWatchApplication
 import com.breiter.movietowatchapp.data.database.MovieDatabase
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.network.getMovieApiService
 import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SearchFragmentBinding
 import com.breiter.movietowatchapp.ui.screen.search.SearchMovieAdapter.OnClickListener
@@ -44,9 +44,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun obtainViewModel(): SearchViewModel {
-        val app = requireNotNull(activity).application
-        val repository = MovieRepository(
-            getMovieApiService(), MovieDatabase.getInstance(app))
+        val app = requireContext().applicationContext as MovieToWatchApplication
+        val repository = app.movieRepository
 
         return ViewModelProvider(
             this,
