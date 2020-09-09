@@ -4,7 +4,7 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 
 
 ## Tech stack & Open-source libraries
-### Android Architecture Components & Third Party
+### Android Architecture Components & Third Party:
 
 + <b>Retrofit</b> library to connect to a REST web service on the internet and get a response.
 + <b>Moshi</b> library to parse the JSON response into a data object.
@@ -16,15 +16,18 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 + <b>Glide</b> to load posters.
 + <b>Timber</b> for better log readability.
 
-### Testing:  
-####  Device Tests
- -  <b>Fragments Tests</b> - Integration tests for fragments are using a test double FakeRepository, FragmentScenario for Fragments' lifecycle state and Mockito and Espresso UI testing frameworks.
-  - <b>Database Testing</b> - The project creates an in memory database for database test but still runs them on the device. 
+## Testing  
+### 1. Instrumented Tests
+### 1.1 Database Testing:
+Database is tested with small instrumented unit tests. The project creates an in memory database for database test but still runs them on the device. runBlockingTest is used whenever Coroutines are run from the tests.
+### 1.2 Fragments Tests:
+Fragments' are tested using Espresso UI framework, FragmentScenario for Fragments' lifecycle state, test doubles FakeRepository and NavController mock created with Mockito. 
 
-### Features
+## Features
 + Get the list instantly when typing.
 + Save the selected movies to the list.
-+ Delete by clicking on the button revelad when swiping the selected movie
++ Delete by clicking on the button revealed when swiping the selected movie
+
 
 ## Open API
 + MovieToWatch uses the [TMDBApi] for constructing RESTful API. Obtain your free API_KEY: https://www.themoviedb.org/signup and paste it to the Constants file to try the app.
