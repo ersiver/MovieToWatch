@@ -49,21 +49,6 @@ class SavedViewModelTest {
 
     @Test
     fun start_loadSavedMovies() = runBlockingTest {
-        repository.insert(TestUtil.createMovie(3, "TITLE3"))
-        repository.insert(TestUtil.createMovie(2, "TITLE2"))
-        repository.insert(TestUtil.createMovie(1, "TITLE1"))
-        viewModel.getSavedMovies()
-
-        viewModel.getSavedMovies()
-
-        val savedMoviesData = viewModel.savedMovies.getOrAwaitValue()
-        assertThat(savedMoviesData.size, `is`(3))
-//        assertThat(savedMoviesData[0].title, `is`("TITLE1"))
-//        assertThat(savedMoviesData[0].id, `is`(1))
-//        assertThat(savedMoviesData[1].title, `is`("TITLE2"))
-//        assertThat(savedMoviesData[1].id, `is`(2))
-//        assertThat(savedMoviesData[2].title, `is`("TITLE3"))
-//        assertThat(savedMoviesData[2].id, `is`(3))
     }
 
 
