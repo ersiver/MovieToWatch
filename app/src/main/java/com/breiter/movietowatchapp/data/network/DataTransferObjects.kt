@@ -14,7 +14,7 @@ data class MovieResponseDTO(@Json(name = "results") val moviesDTO: List<MovieDTO
 data class MovieDTO(
     val id: Int,
     val title: String?,
-    val overview: String,
+    val overview: String?,
     @Json(name = "vote_average") val rating: Double?,
     @Json(name = "poster_path") val posterUrl: String?,
     @Json(name = "original_language") val language: String?,

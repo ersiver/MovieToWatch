@@ -13,13 +13,13 @@ fun MovieResponseDTO.asDomainModel(): List<Movie> {
     return moviesDTO.map {
         Movie(
             id = it.id,
-            title = it.title,
-            overview = it.overview,
-            rating = it.rating,
-            posterUrl = it.posterUrl,
-            language = it.language,
-            releaseDate = it.releaseDate,
-            genreIds = it.genreIds
+            title = it.title ?: "",
+            overview = it.overview ?: "",
+            rating = it.rating ?: 0.0,
+            posterUrl = it.posterUrl ?: "",
+            language = it.language ?: "",
+            releaseDate = it.releaseDate ?: "",
+            genreIds = it.genreIds ?: emptyList()
         )
     }
 }
@@ -56,13 +56,13 @@ fun List<DatabaseMovie>.asDomainModel(): List<Movie> {
     return map {
         Movie(
             id = it.id,
-            title = it.title,
-            overview = it.overview,
-            rating = it.rating,
-            posterUrl = it.posterUrl,
-            language = it.language,
-            releaseDate = it.releaseDate,
-            genreIds = it.genreIds
+            title = it.title ?: "",
+            overview = it.overview ?: "",
+            rating = it.rating ?: 0.0,
+            posterUrl = it.posterUrl ?: "",
+            language = it.language ?: "",
+            releaseDate = it.releaseDate ?: "",
+            genreIds = it.genreIds ?: emptyList()
         )
     }
 }

@@ -5,30 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.breiter.movietowatchapp.MovieToWatchApplication
-import com.breiter.movietowatchapp.data.database.MovieDatabase
 import com.breiter.movietowatchapp.data.domain.Movie
-import com.breiter.movietowatchapp.data.repository.MovieRepository
 import com.breiter.movietowatchapp.databinding.SearchFragmentBinding
 import com.breiter.movietowatchapp.ui.screen.search.SearchMovieAdapter.OnClickListener
+import com.breiter.movietowatchapp.ui.util.getViewModelFactory
 
 class SearchFragment : Fragment() {
-    private lateinit var searchViewModel: SearchViewModel
-
+    private val searchViewModel: SearchViewModel by viewModels {
+        getViewModelFactory()
+    }
     private lateinit var binding: SearchFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = SearchFragmentBinding.inflate(inflater, container, false)
-
-        searchViewModel = obtainViewModel()
-
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = searchViewModel
@@ -38,43 +33,34 @@ class SearchFragment : Fragment() {
                     searchViewModel.displayMovieDetails(movieItem)
                 }
             }
+
             searchedMovieList.adapter = SearchMovieAdapter(onClick)
         }
         return binding.root
     }
 
-    private fun obtainViewModel(): SearchViewModel {
-        val app = requireContext().applicationContext as MovieToWatchApplication
-        val repository = app.movieRepository
-
-        return ViewModelProvider(
-            this,
-            SearchViewModelFactory(repository)
-        ).get(SearchViewModel::class.java)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupNavigationToDetails()
+        setupNavigationToSaved()
+    }
 
-        // Observe the navigateToSelectedMovie LiveData and Navigate when it isn't null.
-        searchViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                this.findNavController()
-                    .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(it))
-
-                // Reset to prevent multiple navigation
-                searchViewModel.navigateToDetailsCompleted()
-            }
-        })
-
-        // Observe the navigateToSaved LiveData and Navigate when it isn't null.
+    private fun setupNavigationToSaved() {
         searchViewModel.navigateToSaved.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
                     .navigate(SearchFragmentDirections.actionSearchFragmentToSavedFragment())
-
-                // Reset to prevent multiple navigation
                 searchViewModel.navigateToSavedCompleted()
+            }
+        })
+    }
+
+    private fun setupNavigationToDetails() {
+        searchViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                this.findNavController()
+                    .navigate(SearchFragmentDirections.actionSearchFragmentToDetailFragment(it))
+                searchViewModel.navigateToDetailsCompleted()
             }
         })
     }

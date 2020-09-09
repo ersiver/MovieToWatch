@@ -7,59 +7,64 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.breiter.movietowatchapp.MovieToWatchApplication
 import com.breiter.movietowatchapp.databinding.DetailFragmentBinding
+import com.breiter.movietowatchapp.ui.util.getViewModelFactory
 
 class DetailFragment : Fragment() {
-    private lateinit var detailViewModel: DetailViewModel
+    private val detailViewModel by viewModels<DetailViewModel>{
+        getViewModelFactory()
+    }
+
+    private val movie by lazy{
+        DetailFragmentArgs.fromBundle(requireArguments()).selectedMovie
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = DetailFragmentBinding.inflate(inflater)
-
-        detailViewModel = obtainViewModel()
-
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = detailViewModel
         }
-
         return binding.root
     }
-
-    // Get DetailViewModel by passing a repository and a movie to the factory
-    private fun obtainViewModel() : DetailViewModel {
-        val app = requireContext().applicationContext as MovieToWatchApplication
-        val movie = DetailFragmentArgs.fromBundle(requireArguments()).selectedMovie
-        return ViewModelProvider(
-            this,
-            DetailViewModelFactory(app.movieRepository, movie)).get(DetailViewModel::class.java)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         hideSoftInput()
 
-        detailViewModel.navigateToSaved.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                this.findNavController()
-                    .navigate(DetailFragmentDirections.actionDetailFragmentToSavedFragment())
+        detailViewModel.start(movie)
+        setupMovie()
+        setupNavigationToSaved()
+        setupNavigationToSearch()
+    }
 
-                detailViewModel.navigateToSavedCompleted()
-            }
+    private fun setupMovie() {
+        detailViewModel.selectedMovie.observe(viewLifecycleOwner, Observer {
+            detailViewModel.updateSaveStatus(it)
         })
+    }
 
+    private fun setupNavigationToSearch() {
         detailViewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 this.findNavController()
                     .navigate(DetailFragmentDirections.actionDetailFragmentToSearchFragment())
-
                 detailViewModel.navigateToSearchComplete()
+            }
+        })
+    }
+
+    private fun setupNavigationToSaved() {
+        detailViewModel.navigateToSaved.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                this.findNavController()
+                    .navigate(DetailFragmentDirections.actionDetailFragmentToSavedFragment())
+                detailViewModel.navigateToSavedCompleted()
             }
         })
     }

@@ -11,17 +11,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: IMovieRepository, val movie: Movie) : ViewModel() {
+class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
     private val job = Job()
     private val coroutineScope = CoroutineScope(job + Dispatchers.Main)
-
-    lateinit var genreAsString: LiveData<List<String>>
-
-    val isSaved: LiveData<Boolean> = repository.isSavedMovie
 
     private val _selectedMovie = MutableLiveData<Movie>()
     val selectedMovie: LiveData<Movie>
         get() = _selectedMovie
+
+    lateinit var genreAsString: LiveData<List<String>>
+
+    val isSaved: LiveData<Boolean> = repository.isSavedMovie
 
     private val _navigateToSearch = MutableLiveData<Boolean>()
     val navigateToSearch: LiveData<Boolean>
@@ -31,25 +31,22 @@ class DetailViewModel(private val repository: IMovieRepository, val movie: Movie
     val navigateToSaved: LiveData<Boolean>
         get() = _navigateToSaved
 
-    init {
+    fun start(movie: Movie) {
         _selectedMovie.value = movie
-        getGenresNames()
-        checkIfSaved()
+        initGenres()
     }
 
-    /**
-     * Creates a genreAsString LiveData, that depends on selectedMovie's genres' id.
-     */
-    private fun getGenresNames() {
-        genreAsString = selectedMovie.switchMap { movie ->
-            repository.getGenresNames(movie.genreIds!!)
+    private fun initGenres(){
+        genreAsString = selectedMovie.switchMap { movie->
+            repository.getGenresNames(movie.genreIds)
         }
     }
 
     /**
-     * Triggers loading of a correct icon (save or delete) to the favourite_image.
+     * Triggers loading of a correct icon
+     * (save or delete) to the favourite_image.
      */
-    private fun checkIfSaved() {
+     fun updateSaveStatus(movie: Movie) {
         coroutineScope.launch {
             repository.setSaved(movie)
         }
@@ -70,14 +67,17 @@ class DetailViewModel(private val repository: IMovieRepository, val movie: Movie
 
     private fun removeFromSaved() {
         coroutineScope.launch {
-            repository.delete(movie)
-
+            selectedMovie.value?.let {
+                repository.delete(it)
+            }
         }
     }
 
     private fun saveMovie() {
         coroutineScope.launch {
-            repository.insert(movie)
+            selectedMovie.value?.let {
+                repository.insert(it)
+            }
         }
     }
 

@@ -37,7 +37,6 @@ class MovieToWatchApplication : Application() {
      * WorkManager background job to fetch genre network data weekly.
      */
     private fun setupRecurringWork() {
-
         val constrains = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .setRequiresBatteryNotLow(true)

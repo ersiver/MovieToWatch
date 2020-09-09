@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
-import com.breiter.movietowatchapp.data.repository.MovieRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
+
+
+enum class NetworkStatus { ERROR, DONE }
 
 class SearchViewModel(private val repository: IMovieRepository) : ViewModel() {
     private val job = Job()
@@ -119,5 +121,3 @@ class SearchViewModel(private val repository: IMovieRepository) : ViewModel() {
         job.cancel()
     }
 }
-
-enum class NetworkStatus { ERROR, DONE }
