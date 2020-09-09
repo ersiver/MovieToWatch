@@ -174,7 +174,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginBottom="16dp"
                     android:contentDescription="@string/heart_icon"
-                    android:onClick="@{()-> viewModel.onAddClick()}"
+                    android:onClick="@{()-> viewModel.onAddRemoveClick()}"
                     app:src="@{viewModel.isSaved}"
                     tools:src="@drawable/ic_favorite" />
 

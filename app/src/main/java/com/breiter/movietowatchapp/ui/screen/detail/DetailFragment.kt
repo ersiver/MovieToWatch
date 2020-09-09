@@ -45,7 +45,7 @@ class DetailFragment : Fragment() {
 
     private fun setupMovie() {
         detailViewModel.selectedMovie.observe(viewLifecycleOwner, Observer {
-            detailViewModel.updateSaveStatus(it)
+            detailViewModel.initSavedStatus(it)
         })
     }
 

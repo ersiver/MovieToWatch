@@ -15,7 +15,7 @@ import androidx.test.filters.MediumTest
 import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.ServiceLocator
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
-import com.breiter.movietowatchapp.ui.screen.datasource.FakeRepository
+import com.breiter.movietowatchapp.util.FakeRepository
 import com.breiter.movietowatchapp.util.TestUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

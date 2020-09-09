@@ -46,7 +46,7 @@ class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
      * Triggers loading of a correct icon
      * (save or delete) to the favourite_image.
      */
-     fun updateSaveStatus(movie: Movie) {
+     fun initSavedStatus(movie: Movie) {
         coroutineScope.launch {
             repository.setSaved(movie)
         }
@@ -56,12 +56,9 @@ class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
      * Executes when the favourite_image is clicked.
      * Will save or delete the movie respectively.
      */
-    fun onAddClick() {
-        isSaved.value?.let { isSaved ->
-            when (isSaved) {
-                true -> removeFromSaved()
-                false -> saveMovie()
-            }
+    fun onAddRemoveClick() {
+        isSaved.value?.let {
+            if(it) removeFromSaved() else saveMovie()
         }
     }
 

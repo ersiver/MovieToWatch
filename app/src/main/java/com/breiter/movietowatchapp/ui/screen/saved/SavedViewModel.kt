@@ -36,7 +36,7 @@ class SavedViewModel(private val repository: IMovieRepository) : ViewModel() {
      * Creates _savedMovies MediatorLiveData, which observes repository
      * LiveData and will update list of saved movies onChanged events.
      */
-    private fun getSavedMovies() {
+    fun getSavedMovies() {
         _savedMovies.addSource(repository.getSavedMovies()) {
             _savedMovies.value = it
         }

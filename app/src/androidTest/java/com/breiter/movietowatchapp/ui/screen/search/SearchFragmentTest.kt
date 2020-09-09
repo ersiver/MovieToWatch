@@ -1,37 +1,23 @@
 package com.breiter.movietowatchapp.ui.screen.search
 
 import android.os.Bundle
-import androidx.fragment.app.testing.launchFragment
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.MediumTest
 import com.breiter.movietowatchapp.R
 import com.breiter.movietowatchapp.ServiceLocator
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
-import com.breiter.movietowatchapp.ui.screen.datasource.FakeRepository
-import com.breiter.movietowatchapp.ui.screen.saved.SavedFragment
-import com.breiter.movietowatchapp.ui.screen.saved.SavedFragmentDirections
-import com.breiter.movietowatchapp.util.TestUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import com.breiter.movietowatchapp.util.FakeRepository
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.mockito.Mockito.any
 import org.mockito.Mockito.verify
 
 @MediumTest
