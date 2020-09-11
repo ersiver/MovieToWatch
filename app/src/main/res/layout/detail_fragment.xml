@@ -18,7 +18,7 @@
         tools:context=".ui.screen.detail.DetailFragment">
 
         <TextView
-            android:id="@+id/title_text"
+            android:id="@+id/movie_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
@@ -32,7 +32,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/title_text"
+            android:layout_below="@+id/movie_title_text"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">

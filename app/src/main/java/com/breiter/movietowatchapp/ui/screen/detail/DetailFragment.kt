@@ -38,15 +38,8 @@ class DetailFragment : Fragment() {
         hideSoftInput()
 
         detailViewModel.start(movie)
-        setupMovie()
         setupNavigationToSaved()
         setupNavigationToSearch()
-    }
-
-    private fun setupMovie() {
-        detailViewModel.selectedMovie.observe(viewLifecycleOwner, Observer {
-            detailViewModel.initSavedStatus(it)
-        })
     }
 
     private fun setupNavigationToSearch() {

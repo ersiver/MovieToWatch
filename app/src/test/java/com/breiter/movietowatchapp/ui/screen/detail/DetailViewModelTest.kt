@@ -7,19 +7,17 @@ import com.breiter.movietowatchapp.util.MainCoroutineRule
 import com.breiter.movietowatchapp.util.TestUtil
 import com.breiter.movietowatchapp.util.getOrAwaitValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.core.Is.`is`
 import org.junit.After
+import org.junit.Assert.assertThat
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 
 /**
- * Unit tests for the implementation of [DetailViewModel]
+ * Local unit tests for the implementation of [DetailViewModel]
  */
 @ExperimentalCoroutinesApi
 class DetailViewModelTest {
@@ -45,7 +43,7 @@ class DetailViewModelTest {
     }
 
     @Test
-    fun start_setInitialMovieValue() {
+    fun start_movieValueSet() {
         val movie = TestUtil.createMovie(1, "TITLE1")
         viewModel.start(movie)
         val movieData = viewModel.selectedMovie.getOrAwaitValue()
@@ -54,48 +52,71 @@ class DetailViewModelTest {
         assertThat(movieData.id, `is`(1))
     }
 
+
     @Test
-    fun notSavedMovie_valueFalse() = runBlocking {
+    fun clickAddRemoveOnUnsaved_saveMovie() = runBlockingTest {
         val movie = TestUtil.createMovie(1, "TITLE1")
-        viewModel.initSavedStatus(movie)
-        val initialSave = viewModel.isSaved.getOrAwaitValue()
-        assertThat(initialSave, `is`(false))
+
+        viewModel.start(movie)
+        var isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(false))
+
+        viewModel.onAddRemoveClick()
+        isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(true))
     }
 
     @Test
-    fun savedMovie_valueTrue() = runBlocking {
-        val movie = TestUtil.createMovie(1, "TITLE1")
+    fun clickAddRemoveOnSaved_removeMovie() = runBlockingTest {
+        val movie = TestUtil.createMovie()
         repository.insert(movie)
-        viewModel.initSavedStatus(movie)
-        val initialSave = viewModel.isSaved.getOrAwaitValue()
-        assertThat(initialSave, `is`(true))
+
+        viewModel.start(movie)
+        var isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(true))
+
+        viewModel.onAddRemoveClick()
+        isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(false))
     }
 
     @Test
-    fun onSearchNavClicked_navigationEventTriggered() {
+    fun onSearchClick_navigateToSearchTrue() {
         viewModel.onSearchClick()
-        val isEventTriggered = viewModel.navigateToSearch.getOrAwaitValue()
-        assertThat(isEventTriggered, `is` (true))
+        val navSearchEvent = viewModel.navigateToSearch.getOrAwaitValue()
+        assertThat(navSearchEvent, `is`(true))
     }
 
     @Test
-    fun navigateToSearchComplete() {
+    fun navigateToSearchComplete_navigateToSearchNull() {
         viewModel.navigateToSearchComplete()
-        val isEventTriggered = viewModel.navigateToSearch
-        assertThat(isEventTriggered.getOrAwaitValue(), `is` (nullValue()))
+        val navSearchEvent = viewModel.navigateToSearch
+        assertThat(navSearchEvent.getOrAwaitValue(), `is`(nullValue()))
     }
 
     @Test
-    fun onSaveNavClicked_navigationEventTriggered() {
+    fun onSaveClick_navigateToSearchTrue() {
         viewModel.onSavedClicked()
-        val isEventTriggered = viewModel.navigateToSaved.getOrAwaitValue()
-        assertThat(isEventTriggered, `is`(true))
+        val navSaveEvent = viewModel.navigateToSaved.getOrAwaitValue()
+        assertThat(navSaveEvent, `is`(true))
     }
 
     @Test
-    fun navigateToSavedCompleted() {
+    fun navigateToSearchComplete_navigateToSaveNull() {
         viewModel.navigateToSavedCompleted()
-        val isEventTriggered = viewModel.navigateToSaved
-        assertThat(isEventTriggered.getOrAwaitValue(), `is` (nullValue()))
+        val navSaveEvent = viewModel.navigateToSaved
+        assertThat(navSaveEvent.getOrAwaitValue(), `is`(nullValue()))
+    }
+
+    @Test
+    fun addToSaved_saveValueTrue() = runBlockingTest {
+        val movie = TestUtil.createMovie(1, "TITLE1")
+        viewModel.start(movie)
+        var isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(false))
+
+        viewModel.saveMovie()
+        isSavedValue = viewModel.isSaved.getOrAwaitValue()
+        assertThat(isSavedValue, `is`(true))
     }
 }

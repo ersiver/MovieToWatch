@@ -26,15 +26,19 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
+/**
+ * Instrumental test for the SavedFragment.
+ */
+
 @ExperimentalCoroutinesApi
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class SavedFragmentTest {
 
-    private lateinit var repository: IMovieRepository
+    private lateinit var repository: FakeRepository
 
     @Before
-    fun setUp()  {
+    fun setUp() {
         repository = FakeRepository()
         ServiceLocator.repository = repository
     }
@@ -45,18 +49,14 @@ class SavedFragmentTest {
     }
 
     /**
-     * Test to verify that all saved movies
-     * are shown, when the fragment launches.
+     * Test to verify that all saved movies are shown, when the fragment launches.
      */
     @Test
     fun showAllMovies() = runBlockingTest {
         val movie1 = TestUtil.createMovie(1, "TITLE1")
         val movie2 = TestUtil.createMovie(2, "TITLE2")
         val movie3 = TestUtil.createMovie(3, "TITLE3")
-
-        repository.insert(movie1)
-        repository.insert(movie2)
-        repository.insert(movie3)
+        repository.add(movie1, movie2, movie3)
 
         launchFragmentInContainer<SavedFragment>(Bundle(), R.style.AppTheme)
         onView(withText("TITLE1")).check(matches(isDisplayed()))
@@ -66,14 +66,13 @@ class SavedFragmentTest {
 
     /**
      * Navigation test to check, that when a movie item is clicked in
-     * the movie list, it the correct movie is passed to DetailFragment.
+     * the movie list, the correct movie is passed to DetailFragment.
      */
     @Test
     fun clickMovie_NavigateToDetailFragment() = runBlockingTest {
         val movie1 = TestUtil.createMovie(1, "TITLE1")
-        val movie2 = TestUtil.createMovie(2,"TITLE2")
-        repository.insert(movie1)
-        repository.insert(movie2)
+        val movie2 = TestUtil.createMovie(2, "TITLE2")
+        repository.add(movie1, movie2)
 
         val scenario = launchFragmentInContainer<SavedFragment>(Bundle(), R.style.AppTheme)
         val navController = mock(NavController::class.java)
@@ -81,8 +80,11 @@ class SavedFragmentTest {
             Navigation.setViewNavController(it.requireView(), navController)
         }
 
-        onView(withId(R.id.saved_movies_list)).perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-            hasDescendant(withText("TITLE1")), click()))
+        onView(withId(R.id.saved_movies_list)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                hasDescendant(withText("TITLE1")), click()
+            )
+        )
 
         verify(navController).navigate(
             SavedFragmentDirections.actionSavedFragmentToDetailFragment(

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
+import kotlinx.coroutines.runBlocking
 
 /**
  * Implementation of a data source with static access to the data for easy testing.
@@ -19,6 +20,7 @@ class FakeRepository : IMovieRepository {
     override val _isSavedMovie = MutableLiveData<Boolean>()
     override val isSavedMovie: LiveData<Boolean>
         get() = _isSavedMovie
+
 
     override suspend fun insert(movie: Movie) {
         moviesFakeData[movie.id] = movie
@@ -36,9 +38,10 @@ class FakeRepository : IMovieRepository {
     }
 
     override fun getSavedMovies(): LiveData<List<Movie>> {
-        val moviesData = MutableLiveData<List<Movie>>()
-        moviesData.value = moviesFakeData.values.toList()
-        return moviesData
+        val savedMovies = MutableLiveData<List<Movie>>()
+        val movieSource = moviesFakeData.values.toList()
+        savedMovies.value = movieSource
+        return savedMovies
     }
 
     override fun getGenresNames(ids: List<Int>): LiveData<List<String>> {
@@ -59,5 +62,11 @@ class FakeRepository : IMovieRepository {
         genresFakeData[1] = "comedy"
         genresFakeData[2] = "romanse"
         genresFakeData[3] = "sci-fi"
+    }
+
+    suspend fun add(vararg movies: Movie) {
+        for (movie in movies) {
+            insert(movie)
+        }
     }
 }

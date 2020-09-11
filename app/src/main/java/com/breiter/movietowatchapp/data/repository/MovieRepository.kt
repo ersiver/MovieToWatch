@@ -8,7 +8,6 @@ import com.breiter.movietowatchapp.data.network.MovieService
 import com.breiter.movietowatchapp.data.util.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class MovieRepository(
     private val movieService: MovieService,

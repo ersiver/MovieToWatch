@@ -20,13 +20,16 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 
+/**
+ * Instrumental test for the SearchFragment.
+ */
 @MediumTest
 class SearchFragmentTest {
 
     private lateinit var repository: IMovieRepository
 
     @Before
-    fun setUp()  {
+    fun setUp() {
         repository = FakeRepository()
         ServiceLocator.repository = repository
     }
@@ -41,7 +44,7 @@ class SearchFragmentTest {
      *  list of movies with matching title is displayed.
      */
     @Test
-    fun setQuery_displayMovieList(){
+    fun setQuery_displayMovieList() {
         launchFragmentInContainer<SearchFragment>(Bundle(), R.style.AppTheme)
         onView(withId(R.id.queryEditText)).perform(typeText("Joker"))
         onView(withId(R.id.searchedMovieList)).check(matches(hasDescendant(withText("Joker"))))
@@ -59,8 +62,8 @@ class SearchFragmentTest {
     }
 
     /**
-     *  Test to check, that when clear_button is clicked the edit_text
-     *  is empty and no movie is displayed in the movie list.
+     *  Test to check, that when the clear_button is clicked then the
+     *  edit_text is empty and no movie is displayed in the movie list.
      */
     @Test
     fun deleteQuery() {
@@ -72,7 +75,7 @@ class SearchFragmentTest {
     }
 
     /**
-     * Navigation test to check, that when a saved_movies
+     * Navigation test to check, that when the saved_movies
      * button is clicked, the SavedFragment is launched.
      */
     @Test

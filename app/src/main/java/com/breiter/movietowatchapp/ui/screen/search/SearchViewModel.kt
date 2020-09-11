@@ -1,5 +1,6 @@
 package com.breiter.movietowatchapp.ui.screen.search
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,7 +35,8 @@ class SearchViewModel(private val repository: IMovieRepository) : ViewModel() {
     val status: LiveData<NetworkStatus>
         get() = _status
 
-    private val query = MutableLiveData<String>()
+    @VisibleForTesting
+    internal val query = MutableLiveData<String>()
 
     private val _clearQuery = MutableLiveData<Boolean>()
     val clearQuery: LiveData<Boolean>

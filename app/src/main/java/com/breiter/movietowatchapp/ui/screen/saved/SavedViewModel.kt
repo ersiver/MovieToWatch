@@ -15,6 +15,7 @@ class SavedViewModel(private val repository: IMovieRepository) : ViewModel() {
     private val viewModelJob = Job()
     private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    private var movieSource: LiveData<List<Movie>> = MutableLiveData()
     private val _savedMovies = MediatorLiveData<List<Movie>>()
     val savedMovies: LiveData<List<Movie>>
         get() = _savedMovies
@@ -37,7 +38,9 @@ class SavedViewModel(private val repository: IMovieRepository) : ViewModel() {
      * LiveData and will update list of saved movies onChanged events.
      */
     fun getSavedMovies() {
-        _savedMovies.addSource(repository.getSavedMovies()) {
+        _savedMovies.removeSource(movieSource)
+        movieSource = repository.getSavedMovies()
+        _savedMovies.addSource(movieSource) {
             _savedMovies.value = it
         }
     }

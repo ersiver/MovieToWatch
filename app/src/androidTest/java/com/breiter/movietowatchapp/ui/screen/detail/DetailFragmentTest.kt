@@ -15,7 +15,6 @@ import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
 import com.breiter.movietowatchapp.util.FakeRepository
 import com.breiter.movietowatchapp.util.TestUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +22,10 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 
-@ExperimentalCoroutinesApi
+/**
+ * Instrumental test for the DetailFragment.
+ */
+
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class DetailFragmentTest {
@@ -31,14 +33,14 @@ class DetailFragmentTest {
     private lateinit var movie: Movie
 
     @Before
-    fun setUp()  {
+    fun setUp() {
         repository = FakeRepository()
         ServiceLocator.repository = repository
-        movie = TestUtil.createMovie(1, "TITLE1")
+        movie = TestUtil.createMovie()
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         ServiceLocator.resetRepository()
     }
 
@@ -47,23 +49,26 @@ class DetailFragmentTest {
      *  on the screen when the DetailFragment is launched.
      */
     @Test
-    fun launchFragment_displayedInUi(){
+    fun launchFragment_displayedInUi() {
         val bundle = DetailFragmentArgs(movie).toBundle()
         launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
 
+        onView(withId(R.id.movie_title_text)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_title_text)).check(matches(withText(movie.title)))
         onView(withId(R.id.poster_image)).check(matches(isDisplayed()))
         onView(withId(R.id.overview_text)).check(matches(withText(movie.overview)))
         onView(withId(R.id.overview_text)).check(matches(isDisplayed()))
         onView(withId(R.id.rating_text)).check(matches(withText(movie.rating.toString())))
         onView(withId(R.id.rating_text)).check(matches(isDisplayed()))
         onView(withId(R.id.releasedTextView)).check(matches(isDisplayed()))
+        onView(withId(R.id.releasedTextView)).check(matches(withText(movie.releaseDate)))
         onView(withId(R.id.language_text)).check(matches(withText(movie.language)))
         onView(withId(R.id.language_text)).check(matches(withText(movie.language)))
     }
 
     /**
-     * Navigation test to check, if the SearchFragment
-     *  is launched after clicking on a nav_search button.
+     * Navigation test to check, that if nav_search button
+     * is clicked the SearchFragment is launched.
      */
     @Test
     fun clickSearchButton_NavigateToSearch() {
@@ -71,17 +76,16 @@ class DetailFragmentTest {
         val scenario = launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         val navController = mock(NavController::class.java)
         scenario.onFragment {
-            Navigation.setViewNavController(it.view!!, navController)
+            Navigation.setViewNavController(it.requireView(), navController)
         }
 
         onView(withId(R.id.action_nav_search)).perform(click())
-
         verify(navController).navigate(DetailFragmentDirections.actionDetailFragmentToSearchFragment())
     }
 
     /**
-     * Navigation test to check, if the SearchFragment
-     *  is launched after clicking on nav_search button.
+     * Navigation test to check, that if saved_movies button
+     * is clicked the SaveFragment is launched.
      */
     @Test
     fun clickSavedMoviesButton_NavigateToSave() {
@@ -89,7 +93,7 @@ class DetailFragmentTest {
         val scenario = launchFragmentInContainer<DetailFragment>(bundle, R.style.AppTheme)
         val navController = mock(NavController::class.java)
         scenario.onFragment {
-            Navigation.setViewNavController(it.view!!, navController)
+            Navigation.setViewNavController(it.requireView(), navController)
         }
 
         onView(withId(R.id.saved_movies)).perform(click())

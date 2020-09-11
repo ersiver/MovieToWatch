@@ -1,15 +1,10 @@
 package com.breiter.movietowatchapp.ui.screen.detail
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.*
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.data.repository.IMovieRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
     private val job = Job()
@@ -34,21 +29,23 @@ class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
     fun start(movie: Movie) {
         _selectedMovie.value = movie
         initGenres()
-    }
+        initSavedStatus(movie)
 
-    private fun initGenres(){
-        genreAsString = selectedMovie.switchMap { movie->
-            repository.getGenresNames(movie.genreIds)
-        }
     }
 
     /**
      * Triggers loading of a correct icon
      * (save or delete) to the favourite_image.
      */
-     fun initSavedStatus(movie: Movie) {
+    private fun initSavedStatus(movie: Movie) {
         coroutineScope.launch {
             repository.setSaved(movie)
+        }
+    }
+
+    private fun initGenres() {
+        genreAsString = selectedMovie.switchMap { movie ->
+            repository.getGenresNames(movie.genreIds)
         }
     }
 
@@ -62,7 +59,8 @@ class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
         }
     }
 
-    private fun removeFromSaved() {
+    @VisibleForTesting
+    internal fun removeFromSaved() {
         coroutineScope.launch {
             selectedMovie.value?.let {
                 repository.delete(it)
@@ -70,7 +68,8 @@ class DetailViewModel(private val repository: IMovieRepository) : ViewModel() {
         }
     }
 
-    private fun saveMovie() {
+    @VisibleForTesting
+    internal fun saveMovie() {
         coroutineScope.launch {
             selectedMovie.value?.let {
                 repository.insert(it)
