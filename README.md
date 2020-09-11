@@ -17,11 +17,18 @@ MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates u
 + <b>Timber</b> for better log readability.
 
 ## Testing  
-### 1. Instrumented Tests
-### 1.1 Database Testing:
+### Instrumented Tests
+### + Database Testing:
 Database is tested with small instrumented unit tests. The project creates an in memory database for database test but still runs them on the device. runBlockingTest is used whenever Coroutines are run from the tests.
-### 1.2 Fragments Tests:
+### + Fragments Tests:
 Fragments' are tested using Espresso UI framework, FragmentScenario for Fragments' lifecycle state, test doubles FakeRepository and NavController mock created with Mockito. 
+
+### Local Unit Tests
+### + ViewModel Test: 
+ViewModels are tested using local unit tests with fake Repository implementation.
+### + Repository Test: 
+Repository is tested using local unit tests with fake versions of DataSource and network Service.
+
 
 ## Features
 + Get the list instantly when typing.
