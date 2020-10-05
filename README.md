@@ -39,7 +39,7 @@ Repository is tested using local unit tests with fake versions of DataSource and
 ## Open API
 + MovieToWatch uses the [TMDBApi](https://www.themoviedb.org/signup) for constructing RESTful API. Obtain your free [API_KEY:](https://www.themoviedb.org/signup) and paste it to the Constants file to try the app.
 
-<img src="/previews/preview_2.gif" width="33%"/>  <img src="/previews/screen_1.gif" width="33%"/>
+<img src="/previews/preview_2.gif" width="33%"/>  <img src="/previews/screen_1.jpg" width="33%"/>
 
 
 
