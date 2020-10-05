@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.breiter.movietowatchapp.data.domain.Movie
 import com.breiter.movietowatchapp.databinding.SavedFragmentBinding
@@ -58,24 +57,24 @@ class SavedFragment : Fragment() {
     }
 
     private fun setupNavigationToSearch() {
-        savedViewModel.navigateToSearch.observe(viewLifecycleOwner, Observer {
+        savedViewModel.navigateToSearch.observe(viewLifecycleOwner) {
             if (it != null) {
                 this.findNavController()
                     .navigate(SavedFragmentDirections.actionSavedFragmentToSearchFragment())
                 savedViewModel.navigateToSearchComplete()
             }
-        })
+        }
     }
 
     private fun setupNavigationToDetail() {
-        savedViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner, Observer {
+        savedViewModel.navigateToSelectedMovie.observe(viewLifecycleOwner) {
             if (it != null) {
                 this.findNavController()
                     .navigate(SavedFragmentDirections.actionSavedFragmentToDetailFragment(it))
                 // Reset to prevent multiple navigation
                 savedViewModel.navigateToDetailsCompleted()
             }
-        })
+        }
     }
 
     private fun hideSoftInput() {

@@ -1,5 +1,5 @@
 # MovieToWatch
-<img align="right" src="https://user-images.githubusercontent.com/58771510/92301962-03ed3e80-ef60-11ea-9c79-4a8b1d1d554d.gif" width="33%"/>
+<img align="right" src="/previews/preview_1.gif" width="33%"/>
 MovieToWatch is a demo movie app developed in <b>Kotlin</b>, that demonstrates use of the latest Android development techniques. The app integrates <b>Kotlin Coroutines with Retrofit</b> to fetch movie information and binds all UI components in the XML layout to data sources using a <b>DataBinding</b> rather than programmatically. The UI calls are done in <b>Binding Adapters</b> reducing boilerplate code in the fragments. All is done following <b>MVVM</b> pattern for the presentation layer. Using <b>repository</b> the web services and <b>Room</b> operations are abstracted from the rest of the app.  
 
 
@@ -37,8 +37,11 @@ Repository is tested using local unit tests with fake versions of DataSource and
 
 
 ## Open API
-+ MovieToWatch uses the [TMDBApi] for constructing RESTful API. Obtain your free API_KEY: https://www.themoviedb.org/signup and paste it to the Constants file to try the app.
++ MovieToWatch uses the [TMDBApi](https://www.themoviedb.org/signup) for constructing RESTful API. Obtain your free [API_KEY:](https://www.themoviedb.org/signup) and paste it to the Constants file to try the app.
 
-<img src="https://user-images.githubusercontent.com/58771510/85013170-08256f00-b15c-11ea-96e1-139b6ccd7569.gif" width="33%"/>  <img src="https://user-images.githubusercontent.com/58771510/92279621-99041f00-eeef-11ea-9e65-f9c1d02805be.jpg" width="33%"/>
+<img src="/previews/preview_2.gif" width="33%"/>  <img src="/previews/screen_1.gif" width="33%"/>
+
+
+
 
 
